@@ -1,11 +1,11 @@
 var PomodoroScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
-        var bgLayer = new BackgroundLayer();
-        this.addChild(bgLayer);
+        this.addChild(new BackgroundLayer());
         
-        var layer = new PomodoroUILayer();
-        this.addChild(layer);
+        this.addChild(new PomodoroUILayer());
+        
+        this.addChild(new UILayer());
     }
 });
 

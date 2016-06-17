@@ -10,14 +10,14 @@ var fonts = {
         srcs: ["res/fonts/hellogoodbye.ttf"]
     },
 };
-var fonts_settings = {
+var fontsSettings = {
     mainTextColor : new cc.Color(0, 0, 0),
-    timeLabelSize : 240
+    timeLabelSize : 240,
+    currencyLabelSize : 75
 };
 for (var i in fonts) {
     g_resources.push(fonts[i]);
 }
-
 
 // Path to pet-layer sprites
 let folder = "res/sprites/pomodoro-scene/pet-layer/";
@@ -48,16 +48,16 @@ for (var i in pomodoroLayerRes) {
 
 // Path to pomodoro-layer sprites
 folder = "res/sprites/ui-layer/";
-var uiLayer = {
+var uiLayerRes = {
     categories : folder + "main-menu/categories.png",
     help : folder + "main-menu/help.png",
     menu : folder + "main-menu/menu.png",
     settings : folder + "main-menu/settings.png",
     user : folder + "main-menu/user.png",
-    diamonds : folder + "diamonds.png",
+    diamond : folder + "diamonds.png",
     money : folder + "money.png"
 };
-for (var i in uiLayer) {
-    g_resources.push(uiLayer[i]);
+for (var i in uiLayerRes) {
+    g_resources.push(uiLayerRes[i]);
 }
 
