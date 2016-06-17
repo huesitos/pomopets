@@ -12,7 +12,12 @@
     "modules" : ["cocos2d", "extensions"],
 
     "jsList" : [
-        "src/resource.js",
-        "src/app.js"
+        "src/ui/pet/PetUILayer.js",
+        "src/ui/pomodoro/PomodoroScene.js",
+        "src/ui/pomodoro/PomodoroUILayer.js",
+        "src/ui/BackgroundLayer.js",
+        "src/ui/UILayer.js",
+        "src/ui/Utils.js",
+        "src/Resource.js"
     ]
 }
