@@ -20,19 +20,25 @@ for (var i in fonts) {
 }
 
 // Path to pet-layer sprites
-let folder = "res/sprites/pomodoro-scene/pet-layer/";
+var folder = "res/sprites/pomodoro-scene/pet-layer/";
 var petLayerRes = {
     food : folder + "food.png",
     heart : folder + "heart.png",
     outfit : folder + "outfit.png",
     pets : folder + "pets.png",
-    sleep : folder + "sleep.png",
-    petSprite1 : folder + "pet-sprite1.png",
-    petSprite2 : folder + "pet-sprite2.png",
-    petSprite3 : folder + "pet-sprite3.png"
+    sleep : folder + "sleep.png"
 };
 for (var i in petLayerRes) {
     g_resources.push(petLayerRes[i]);
+}
+
+folder = folder + "pet-sprite-sheet/";
+var petAnimationsRes = {
+    pet_standby_plist : folder + "pet-standby.plist",
+    pet_standby_png : folder + "pet-standby.png"
+}
+for (var i in petAnimationsRes) {
+    g_resources.push(petAnimationsRes[i]);
 }
 
 // Path to pomodoro-layer sprites

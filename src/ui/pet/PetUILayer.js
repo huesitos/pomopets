@@ -11,12 +11,15 @@ var PetUILayer = cc.Layer.extend({
         //////////////////////////////
         // 2. add pet
         
-        this.petSprite = new cc.Sprite(petLayerRes.petSprite1);
+        var pet = cc.spriteFrameCache.getSpriteFrame("pet-sprite1.png");
+        this.petSprite = new cc.Sprite(pet);
         this.petSprite.attr({
             x: 621,
             y: 1120
         });
-        this.addChild(this.petSprite);
+        this.addChild(this.petSprite, 1);
+        
+        petAnimator.animatePetStandBy(this.petSprite);
         
         //////////////////////////////
         // 3. add pet heart
@@ -28,47 +31,128 @@ var PetUILayer = cc.Layer.extend({
         });
         this.addChild(this.petHeart);
         
+        petUIAnimator.animateHeartBeat(this.petHeart);
+        
         //////////////////////////////
         // 4. add pet buttons
         
-        this.foodBtn = new ccui.Button(petLayerRes.food);
-        this.foodBtn.attr({
-            x: 533,
-            y: size.height - 410,
-            visible: false
-        });
-        this.addChild(this.foodBtn);
+        // all buttons start behind the pet and in the center
+        var initialX = this.petSprite.getPositionX();
+        var initialY = size.height / 2;
+        var initialPos = cc.p(initialX, initialY);
         
-        this.outfitBtn = new ccui.Button(petLayerRes.outfit);
-        this.outfitBtn.attr({
-            x: 333,
-            y: size.height - 460,
-            visible: false
-        });
-        this.addChild(this.outfitBtn);
+        // food
+        var foodBtn = new ccui.Button(petLayerRes.food);
+        foodBtn.setPosition(initialPos);
         
-        this.petsBtn = new ccui.Button(petLayerRes.pets);
-        this.petsBtn.attr({
-            x: 733,
-            y: size.height - 410,
-            visible: false
-        });
-        this.addChild(this.petsBtn);
+        var foodBtnAnimInfo = {
+            initialPos: initialPos,
+            finalPos: cc.p(533, size.height - 410)
+        }
+        foodBtn.setUserData(foodBtnAnimInfo);
+        this.addChild(foodBtn, 0);
         
-        this.sleepBtn = new ccui.Button(petLayerRes.sleep);
-        this.sleepBtn.attr({
-            x: 933,
-            y: size.height - 460,
-            visible: false
-        });
-        this.addChild(this.sleepBtn);
+        // outfit
+        var outfitBtn = new ccui.Button(petLayerRes.outfit);
+        outfitBtn.setPosition(initialPos);
+        
+        var outfitBtnAnimInfo = {
+            initialPos: initialPos,
+            finalPos: cc.p(333, size.height - 460)
+        }
+        outfitBtn.setUserData(outfitBtnAnimInfo);
+        this.addChild(outfitBtn, 0);
+        
+        // pets
+        var petsBtn = new ccui.Button(petLayerRes.pets);
+        petsBtn.setPosition(initialPos);
+        
+        var petsBtnAnimInfo = {
+            initialPos: initialPos,
+            finalPos: cc.p(733, size.height - 410)
+        }
+        petsBtn.setUserData(petsBtnAnimInfo);
+        this.addChild(petsBtn, 0);
+        
+        // sleep
+        var sleepBtn = new ccui.Button(petLayerRes.sleep);
+        sleepBtn.setPosition(initialPos);
+        
+        var sleepBtnAnimInfo = {
+            initialPos: initialPos,
+            finalPos: cc.p(933, size.height - 460)
+        }
+        sleepBtn.setUserData(sleepBtnAnimInfo);
+        this.addChild(sleepBtn, 0);
+        
+        var petOptionsBtns = [
+            outfitBtn, 
+            foodBtn, 
+            petsBtn, 
+            sleepBtn
+        ];
+        this.petOptionsBtns = petOptionsBtns;
+        this.petMenuShowing = false;
+        
+        //////////////////////////////
+        // 5. add touch event listener
+        
+        if (cc.sys.capabilities.hasOwnProperty("touches")) {
+            cc.eventManager.addListener({
+                event: cc.EventListener.TOUCH_ONE_BY_ONE,
+                
+                onTouchBegan: (touch, event) => {
+                    return true;
+                },
+                
+                // show pet menu if the user clicks pet
+                // hide pet menu if the user clicks anywhere else
+                onTouchEnded: (touch, event) => {
+                    var petRect = this.petSprite.getBoundingBox();
+                    var point = touch.getLocation();
+                    
+                    if (cc.rectContainsPoint(petRect, point)) {
+                        if (this.petMenuShowing) {
+                            this.hidePetOptions();
+                        } else {
+                            this.showPetOptions();
+                        }
+                    }
+                }
+            }, this);
+        }
+        
+        if (cc.sys.capabilities.hasOwnProperty("mouse")) {
+            cc.eventManager.addListener({
+                event: cc.EventListener.MOUSE,
+                
+                // show pet menu if the user clicks pet
+                // hide pet menu if the user clicks anywhere else
+                onMouseDown: (touch, event) => {
+                    var petRect = this.petSprite.getBoundingBox();
+                    var point = touch.getLocation();
+                    
+                    if (cc.rectContainsPoint(petRect, point)) {
+                        if (this.petMenuShowing) {
+                            this.hidePetOptions();
+                        } else {
+                            this.showPetOptions();
+                        }
+                    }
+                    
+                    return true;
+                }
+            }, this);
+        }
         
         return true;
     },
-    showPetOptions: function (sender, type) {
-        
+    showPetOptions: function () {
+        petUIAnimator.animateOptionsAppear(this.petOptionsBtns);
+        this.petMenuShowing = true;
     },
-    hidePetOptions: function (sender, type) {
-        cc.log("hide");
+    hidePetOptions: function () {
+        petUIAnimator.animateOptionsDisappear(this.petOptionsBtns);
+        this.petMenuShowing = false;
     }
 });

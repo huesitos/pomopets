@@ -13,7 +13,8 @@
 
     "jsList" : [
         "src/ui/pet/PetUILayer.js",
-        "src/ui/pet/PetUIAnimations.js",
+        "src/ui/pet/PetUIAnimator.js",
+        "src/ui/pet/PetAnimator.js",
         "src/ui/pomodoro/PomodoroScene.js",
         "src/ui/pomodoro/PomodoroUILayer.js",
         "src/ui/BackgroundLayer.js",

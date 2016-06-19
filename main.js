@@ -16,6 +16,10 @@ cc.game.onStart = function(){
     cc.view.resizeWithBrowserSize(true);
     //load resources
     cc.LoaderScene.preload(g_resources, function () {
+        cc.spriteFrameCache.addSpriteFrames(
+            petAnimationsRes.pet_standby_plist
+        );
+        
         cc.director.runScene(new PomodoroScene());
     }, this);
 };
