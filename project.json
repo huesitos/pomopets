@@ -19,6 +19,7 @@
         "src/ui/pomodoro/PomodoroUILayer.js",
         "src/ui/BackgroundLayer.js",
         "src/ui/UILayer.js",
+        "src/ui/UIAnimator.js",
         "src/ui/Utils.js",
         "src/Resource.js"
     ]

@@ -55,6 +55,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         foodBtn.setUserData(foodBtnAnimInfo);
+        foodBtn.isVisible(false);
         this.addChild(foodBtn, 0);
         
         // outfit
@@ -71,6 +72,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         outfitBtn.setUserData(outfitBtnAnimInfo);
+        outfitBtn.isVisible(false);
         this.addChild(outfitBtn, 0);
         
         // pets
@@ -87,6 +89,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         petsBtn.setUserData(petsBtnAnimInfo);
+        petsBtn.isVisible(false);
         this.addChild(petsBtn, 0);
         
         // sleep
@@ -103,6 +106,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         sleepBtn.setUserData(sleepBtnAnimInfo);
+        sleepBtn.isVisible(false);
         this.addChild(sleepBtn, 0);
         
         var petOptionsBtns = [
@@ -168,11 +172,11 @@ var PetUILayer = cc.Layer.extend({
         return true;
     },
     showPetOptions: function () {
-        petUIAnimator.animateOptionsAppear(this.petOptionsBtns);
+        petUIAnimator.animateBtnsAppear(this.petOptionsBtns);
         this.petMenuShowing = true;
     },
     hidePetOptions: function () {
-        petUIAnimator.animateOptionsDisappear(this.petOptionsBtns);
+        petUIAnimator.animateBtnsDisappear(this.petOptionsBtns);
         this.petMenuShowing = false;
     },
     foodBtnTouch: function (sender, type) {

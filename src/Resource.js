@@ -57,7 +57,7 @@ for (var i in pomodoroLayerRes) {
 // Path to pomodoro-layer sprites
 folder = "res/sprites/ui-layer/";
 var uiLayerRes = {
-    categories : folder + "main-menu/categories.png",
+    petbook : folder + "main-menu/petbook.png",
     help : folder + "main-menu/help.png",
     menu : folder + "main-menu/menu.png",
     settings : folder + "main-menu/settings.png",

@@ -12,59 +12,92 @@ var UILayer = cc.Layer.extend({
         // 2. add menu
         
         // create menu items
-        var toggleMenuItem = new cc.MenuItemImage(
+        var toggleBtn = makeButton(
             uiLayerRes.menu,
-            uiLayerRes.menu,
-            this.toggleMenuBtnTouch
+            cc.p(118, size.height - 90),
+            this.toggleMenuBtnTouch,
+            this
         );
+        this.addChild(toggleBtn, 1);
         
-        var userItem = new cc.MenuItemImage(
+        // user
+        var userBtn = makeButton(
             uiLayerRes.user,
-            uiLayerRes.user,
-            this.userBtnTouch
+            cc.p(118, size.height - 90),
+            this.userBtnTouch,
+            this
         );
+        userBtn.setVisible(false);
         
-        var categoriesItem = new cc.MenuItemImage(
-            uiLayerRes.categories,
-            uiLayerRes.categories,
-            this.categoriesBtnTouch
+        var userBtnInfo = {
+            initialPos: cc.p(118, size.height - 90),
+            finalPos: cc.p(118, size.height - 220),
+            clickable: false
+        }
+        userBtn.setUserData(userBtnInfo);
+        this.addChild(userBtn, 0);
+        
+        // petbook
+        var petBookBtn = makeButton(
+            uiLayerRes.petbook,
+            cc.p(118, size.height - 90),
+            this.petbookBtnTouch,
+            this
         );
+        petBookBtn.setVisible(false);
         
-        var helpItem = new cc.MenuItemImage(
+        var petBookBtnInfo = {
+            initialPos: cc.p(118, size.height - 90),
+            finalPos: cc.p(118, size.height - 350),
+            clickable: false
+        }
+        petBookBtn.setUserData(petBookBtnInfo);
+        this.addChild(petBookBtn, 0);
+        
+        // help
+        var helpBtn = makeButton(
             uiLayerRes.help,
-            uiLayerRes.help,
-            this.helpBtnTouch
+            cc.p(118, size.height - 90),
+            this.helpBtnTouch,
+            this
         );
+        helpBtn.setVisible(false);
         
-        var settingsItem = new cc.MenuItemImage(
+        var helpBtnInfo = {
+            initialPos: cc.p(118, size.height - 90),
+            finalPos: cc.p(118, size.height - 480),
+            clickable: false
+        }
+        helpBtn.setUserData(helpBtnInfo);
+        this.addChild(helpBtn, 0);
+        
+        // settings
+        var settingsBtn = makeButton(
             uiLayerRes.settings,
-            uiLayerRes.settings,
-            this.settingsBtnTouch
+            cc.p(118, size.height - 90),
+            this.settingsBtnTouch,
+            this
         );
+        settingsBtn.setVisible(false);
         
-        // create menu
+        var settingsBtnInfo = {
+            initialPos: cc.p(118, size.height - 90),
+            finalPos: cc.p(118, size.height - 610),
+            clickable: false
+        }
+        settingsBtn.setUserData(settingsBtnInfo);
+        this.addChild(settingsBtn, 0);
         
-        // gap between menuItems
-        var hGap = 50;
+        // save btns
         
-        // total height of the menu
-        var height = hGap * 7 + toggleMenuItem.height / 2;
-        
-        var menu = new cc.Menu(
-            toggleMenuItem, 
-            userItem, 
-            categoriesItem, 
-            helpItem, 
-            settingsItem
-        );
-        menu.attr({
-            x: 118,
-            y: size.height - height,
-            anchorX: 0,
-            anchorY: 1
-        });
-        menu.alignItemsVerticallyWithPadding(hGap);
-        this.addChild(menu, 0);
+        this.menuBtn = toggleBtn;
+        this.menuOptions = [
+            userBtn,
+            petBookBtn,
+            helpBtn,
+            settingsBtn
+        ];
+        this.menuVisible = false;
         
         //////////////////////////////
         // 3. add money and diamonds labels
@@ -114,18 +147,38 @@ var UILayer = cc.Layer.extend({
         return true;
     },
     toggleMenuBtnTouch: function (sender, type) {
-        cc.log("menu");
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            if (this.menuVisible) {
+                uiAnimator.animateBtnsDisappear(this.menuOptions);
+                this.menuVisible = false;
+            } else {
+                uiAnimator.animateBtnsAppear(this.menuOptions);
+                this.menuVisible = true;
+            }
+        }
     },
     userBtnTouch: function (sender, type) {
-        cc.log("user");
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("user");
+        }
     },
-    categoriesBtnTouch: function (sender, type) {
-        cc.log("categories");
+    petbookBtnTouch: function (sender, type) {
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("petbook");
+        }
     },
     helpBtnTouch: function (sender, type) {
-        cc.log("help");
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("help");
+        }
     },
     settingsBtnTouch: function (sender, type) {
-        cc.log("settings");
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("settings");
+        }
     }
 });
