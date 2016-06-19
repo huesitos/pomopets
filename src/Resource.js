@@ -27,7 +27,9 @@ var petLayerRes = {
     outfit : folder + "outfit.png",
     pets : folder + "pets.png",
     sleep : folder + "sleep.png",
-    petSprite : folder + "pet-sprite1.png"
+    petSprite1 : folder + "pet-sprite1.png",
+    petSprite2 : folder + "pet-sprite2.png",
+    petSprite3 : folder + "pet-sprite3.png"
 };
 for (var i in petLayerRes) {
     g_resources.push(petLayerRes[i]);

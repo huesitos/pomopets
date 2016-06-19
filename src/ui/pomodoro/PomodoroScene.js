@@ -5,6 +5,8 @@ var PomodoroScene = cc.Scene.extend({
         
         this.addChild(new PomodoroUILayer());
         
+        this.addChild(new PetUILayer());
+        
         this.addChild(new UILayer());
     }
 });
