@@ -6,13 +6,10 @@
     position - a cc.p object
     touch - an object with a callback and receiver properties 
 */
-var makeButton = function (texture, position=cc.p(0,0), touch=null) {
+var makeButton = function (texture, position=cc.p(0,0), callback=null, receiver=null) {
     var button = new ccui.Button(texture);
-    button.attr({
-        x: position.x,
-        y: position.y
-    });
-    button.addTouchEventListener(touch.callback, touch.receiver);
+    button.setPosition(position);
+    button.addTouchEventListener(callback, receiver);
     
     return button;
 }

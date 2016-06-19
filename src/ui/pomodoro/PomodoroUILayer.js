@@ -18,10 +18,8 @@ var PomodoroUILayer = cc.Layer.extend({
                 size.width - 939,
                 size.height - 1670
             ), 
-            {
-                callback: this.moreTimeBtnTouch,
-                receiver: this
-            }
+            this.moreTimeBtnTouch,
+            this
         );
         this.addChild(this.more, 0);
         
@@ -31,11 +29,9 @@ var PomodoroUILayer = cc.Layer.extend({
             cc.p(
                 size.width - 302,
                 size.height - 1670
-            ), 
-            {
-                callback: this.lessTimeBtnTouch,
-                receiver: this
-            }
+            ),
+            this.lessTimeBtnTouch,
+            this
         );
         this.addChild(this.less, 0);
         
@@ -45,11 +41,9 @@ var PomodoroUILayer = cc.Layer.extend({
             cc.p(
                 size.width - 621,
                 size.height - 1900
-            ), 
-            {
-                callback: this.startBtnTouch,
-                receiver: this
-            }
+            ),
+            this.startBtnTouch,
+            this
         );
         this.addChild(this.start, 0);
         
@@ -71,12 +65,18 @@ var PomodoroUILayer = cc.Layer.extend({
         return true;
     },
     moreTimeBtnTouch: function (sender, type) {
-        cc.log("more");
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            cc.log("more");
+        }
     },
     lessTimeBtnTouch: function (sender, type) {
-        cc.log("less");
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            cc.log("less");
+        }
     },
     startBtnTouch: function (sender, type) {
-        cc.log("start");
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            cc.log("start");
+        }
     }
 });

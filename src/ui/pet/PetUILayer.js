@@ -42,45 +42,65 @@ var PetUILayer = cc.Layer.extend({
         var initialPos = cc.p(initialX, initialY);
         
         // food
-        var foodBtn = new ccui.Button(petLayerRes.food);
-        foodBtn.setPosition(initialPos);
+        var foodBtn = makeButton(
+            petLayerRes.food,
+            initialPos,
+            this.foodBtnTouch,
+            this
+        );
         
         var foodBtnAnimInfo = {
             initialPos: initialPos,
-            finalPos: cc.p(533, size.height - 410)
+            finalPos: cc.p(533, size.height - 410),
+            clickable: false
         }
         foodBtn.setUserData(foodBtnAnimInfo);
         this.addChild(foodBtn, 0);
         
         // outfit
-        var outfitBtn = new ccui.Button(petLayerRes.outfit);
-        outfitBtn.setPosition(initialPos);
+        var outfitBtn = makeButton(
+            petLayerRes.outfit,
+            initialPos,
+            this.outfitBtnTouch,
+            this
+        );
         
         var outfitBtnAnimInfo = {
             initialPos: initialPos,
-            finalPos: cc.p(333, size.height - 460)
+            finalPos: cc.p(333, size.height - 460),
+            clickable: false
         }
         outfitBtn.setUserData(outfitBtnAnimInfo);
         this.addChild(outfitBtn, 0);
         
         // pets
-        var petsBtn = new ccui.Button(petLayerRes.pets);
-        petsBtn.setPosition(initialPos);
+        var petsBtn = makeButton(
+            petLayerRes.pets,
+            initialPos,
+            this.petsBtnTouch,
+            this
+        );
         
         var petsBtnAnimInfo = {
             initialPos: initialPos,
-            finalPos: cc.p(733, size.height - 410)
+            finalPos: cc.p(733, size.height - 410),
+            clickable: false
         }
         petsBtn.setUserData(petsBtnAnimInfo);
         this.addChild(petsBtn, 0);
         
         // sleep
-        var sleepBtn = new ccui.Button(petLayerRes.sleep);
-        sleepBtn.setPosition(initialPos);
+        var sleepBtn = makeButton(
+            petLayerRes.sleep,
+            initialPos,
+            this.sleepBtnTouch,
+            this
+        );
         
         var sleepBtnAnimInfo = {
             initialPos: initialPos,
-            finalPos: cc.p(933, size.height - 460)
+            finalPos: cc.p(933, size.height - 460),
+            clickable: false
         }
         sleepBtn.setUserData(sleepBtnAnimInfo);
         this.addChild(sleepBtn, 0);
@@ -154,5 +174,29 @@ var PetUILayer = cc.Layer.extend({
     hidePetOptions: function () {
         petUIAnimator.animateOptionsDisappear(this.petOptionsBtns);
         this.petMenuShowing = false;
+    },
+    foodBtnTouch: function (sender, type) {
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("give me food!");
+        }
+    },
+    outfitBtnTouch: function (sender, type) {
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("such fashion!");
+        }
+    },
+    petsBtnTouch: function (sender, type) {
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("here are my friends!");
+        }
+    },
+    sleepBtnTouch: function (sender, type) {
+        var clickable = sender.getUserData().clickable;
+        if (type == ccui.Widget.TOUCH_ENDED && clickable) {
+            cc.log("let me sleep!");
+        }
     }
 });
