@@ -1,5 +1,4 @@
 var PetUILayer = cc.Layer.extend({
-    sprite:null,
     ctor:function () {
         //////////////////////////////
         // 1. super init first

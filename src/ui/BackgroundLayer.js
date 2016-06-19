@@ -1,5 +1,4 @@
 var BackgroundLayer = cc.LayerColor.extend({
-    sprite:null,
     ctor:function (backgroundTexture) {
         //////////////////////////////
         // 1. super init first
