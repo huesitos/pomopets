@@ -46,6 +46,18 @@ var PomodoroUILayer = cc.Layer.extend({
         );
         this.addChild(this.start, 0);
         
+        // start time button
+        this.categories = makeButton(
+            pomodoroLayerRes.categories, 
+            cc.p(
+                350,
+                size.height - 1900
+            ),
+            this.categoriesBtnTouch,
+            this
+        );
+        this.addChild(this.categories, 0);
+        
         /////////////////////////////
         // 3. time label
         
@@ -76,6 +88,11 @@ var PomodoroUILayer = cc.Layer.extend({
     startBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
             cc.log("start");
+        }
+    },
+    categoriesBtnTouch: function (sender, type) {
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            cc.log("categories");
         }
     }
 });

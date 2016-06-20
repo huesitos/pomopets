@@ -12,10 +12,7 @@ var PetUILayer = cc.Layer.extend({
         
         var pet = cc.spriteFrameCache.getSpriteFrame("pet-sprite1.png");
         this.petSprite = new cc.Sprite(pet);
-        this.petSprite.attr({
-            x: 621,
-            y: 1120
-        });
+        this.petSprite.setPosition(cc.p(621, 1120));
         this.addChild(this.petSprite, 1);
         
         petAnimator.animatePetStandBy(this.petSprite);
@@ -24,10 +21,7 @@ var PetUILayer = cc.Layer.extend({
         // 3. add pet heart
         
         this.petHeart = new cc.Sprite(petLayerRes.heart);
-        this.petHeart.attr({
-            x: 621,
-            y: size.height - 150
-        });
+        this.petHeart.setPosition(cc.p(621, size.height - 150));
         this.addChild(this.petHeart);
         
         petUIAnimator.animateHeartBeat(this.petHeart);
