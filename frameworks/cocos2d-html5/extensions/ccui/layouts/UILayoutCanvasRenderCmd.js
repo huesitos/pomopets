@@ -57,9 +57,8 @@
                 default:
                     break;
             }
-        } else {
+        } else
             ccui.Widget.CanvasRenderCmd.prototype.visit.call(this, parentCmd);
-        }
     };
 
     proto._onRenderSaveCmd = function(ctx, scaleX, scaleY){
@@ -104,7 +103,7 @@
             context.globalCompositeOperation = "destination-over";
             context.drawImage(this._locCache, 0, 0);
             context.restore();
-        } else {
+        }else{
             wrapper.restore();                                  //use for restore clip operation
         }
     };
@@ -127,7 +126,7 @@
         }
     };
 
-    proto.stencilClippingVisit = proto.scissorClippingVisit = function (parentCmd) {
+    proto.stencilClippingVisit = proto.scissorClippingVisit = function(parentCmd){
         var node = this._node;
         if (!node._clippingStencil || !node._clippingStencil.isVisible())
             return;
@@ -175,6 +174,6 @@
     };
 
     ccui.Layout.CanvasRenderCmd._getSharedCache = function () {
-        return (cc.ClippingNode._sharedCache) || (cc.ClippingNode._sharedCache = document.createElement("canvas"));
+        return (cc.ClippingNode._sharedCache) || (cc.ClippingNode._sharedCache = cc.newElement("canvas"));
     };
 })();

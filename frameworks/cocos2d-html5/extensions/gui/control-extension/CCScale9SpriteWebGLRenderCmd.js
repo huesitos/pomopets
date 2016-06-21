@@ -23,16 +23,14 @@
  ****************************************************************************/
 
 (function() {
-    if(!cc.Node.WebGLRenderCmd)
-        return;
-    ccui.Scale9Sprite.WebGLRenderCmd = function (renderable) {
+    cc.Scale9Sprite.WebGLRenderCmd = function (renderable) {
         cc.Node.WebGLRenderCmd.call(this, renderable);
         this._cachedParent = null;
         this._cacheDirty = false;
     };
 
-    var proto = ccui.Scale9Sprite.WebGLRenderCmd.prototype = Object.create(cc.Node.WebGLRenderCmd.prototype);
-    proto.constructor = ccui.Scale9Sprite.WebGLRenderCmd;
+    var proto = cc.Scale9Sprite.WebGLRenderCmd.prototype = Object.create(cc.Node.WebGLRenderCmd.prototype);
+    proto.constructor = cc.Scale9Sprite.WebGLRenderCmd;
 
     proto.visit = function(parentCmd){
         var node = this._node;
@@ -91,34 +89,34 @@
 
     proto.setState = function (state) {
         var scale9Image = this._node._scale9Image;
-        if(scale9Image == null)
+        if(scale9Image === null)
             return;
-        if (state === ccui.Scale9Sprite.state.NORMAL) {
+        if (state === cc.Scale9Sprite.state.NORMAL) {
             scale9Image.setShaderProgram(cc.shaderCache.programForKey(cc.SHADER_POSITION_TEXTURECOLOR));
-        } else if (state === ccui.Scale9Sprite.state.GRAY) {
-            scale9Image.setShaderProgram(ccui.Scale9Sprite.WebGLRenderCmd._getGrayShaderProgram());
+        } else if (state === cc.Scale9Sprite.state.GRAY) {
+            scale9Image.setShaderProgram(cc.Scale9Sprite.WebGLRenderCmd._getGrayShaderProgram());
         }
     };
 
-    ccui.Scale9Sprite.WebGLRenderCmd._grayShaderProgram = null;
-    ccui.Scale9Sprite.WebGLRenderCmd._getGrayShaderProgram = function(){
-        var grayShader = ccui.Scale9Sprite.WebGLRenderCmd._grayShaderProgram;
+    cc.Scale9Sprite.WebGLRenderCmd._grayShaderProgram = null;
+    cc.Scale9Sprite.WebGLRenderCmd._getGrayShaderProgram = function(){
+        var grayShader = cc.Scale9Sprite.WebGLRenderCmd._grayShaderProgram;
         if(grayShader)
             return grayShader;
 
         grayShader = new cc.GLProgram();
-        grayShader.initWithVertexShaderByteArray(cc.SHADER_POSITION_TEXTURE_COLOR_VERT, ccui.Scale9Sprite.WebGLRenderCmd._grayShaderFragment);
+        grayShader.initWithVertexShaderByteArray(cc.SHADER_POSITION_TEXTURE_COLOR_VERT, cc.Scale9Sprite.WebGLRenderCmd._grayShaderFragment);
         grayShader.addAttribute(cc.ATTRIBUTE_NAME_POSITION, cc.VERTEX_ATTRIB_POSITION);
         grayShader.addAttribute(cc.ATTRIBUTE_NAME_COLOR, cc.VERTEX_ATTRIB_COLOR);
         grayShader.addAttribute(cc.ATTRIBUTE_NAME_TEX_COORD, cc.VERTEX_ATTRIB_TEX_COORDS);
         grayShader.link();
         grayShader.updateUniforms();
 
-        ccui.Scale9Sprite.WebGLRenderCmd._grayShaderProgram = grayShader;
+        cc.Scale9Sprite.WebGLRenderCmd._grayShaderProgram = grayShader;
         return grayShader;
     };
 
-    ccui.Scale9Sprite.WebGLRenderCmd._grayShaderFragment =
+    cc.Scale9Sprite.WebGLRenderCmd._grayShaderFragment =
         "precision lowp float;\n"
         + "varying vec4 v_fragmentColor; \n"
         + "varying vec2 v_texCoord; \n"

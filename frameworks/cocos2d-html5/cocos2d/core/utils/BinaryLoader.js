@@ -129,7 +129,7 @@ if (cc.loader.loadBinary._IEFilter) {
 
     // inject VBScript
     //document.write(IEBinaryToArray_ByteStr_Script);
-    var myVBScript = document.createElement('script');
+    var myVBScript = cc.newElement('script');
     myVBScript.type = "text/vbscript";
     myVBScript.textContent = IEBinaryToArray_ByteStr_Script;
     document.body.appendChild(myVBScript);

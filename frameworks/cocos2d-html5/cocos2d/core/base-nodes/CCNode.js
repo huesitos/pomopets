@@ -132,7 +132,6 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
     _localZOrder: 0,                                     ///< Local order (relative to its siblings) used to sort the node
     _globalZOrder: 0,                                    ///< Global order used to sort the node
     _vertexZ: 0.0,
-    _customZ: NaN,
 
     _rotationX: 0,
     _rotationY: 0.0,
@@ -488,7 +487,7 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
      * @param {Number} Var
      */
     setVertexZ: function (Var) {
-        this._customZ = this._vertexZ = Var;
+        this._vertexZ = Var;
     },
 
     /**
@@ -1288,7 +1287,6 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
             if (this._isTransitionFinished)
                 child.onEnterTransitionDidFinish();
         }
-        child._renderCmd.setDirtyFlag(cc.Node._dirtyFlags.transformDirty);
         if (this._cascadeColorEnabled)
             child._renderCmd.setDirtyFlag(cc.Node._dirtyFlags.colorDirty);
         if (this._cascadeOpacityEnabled)
@@ -1448,7 +1446,6 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
         child.arrivalOrder = cc.s_globalOrderOfArrival;
         cc.s_globalOrderOfArrival++;
         child._setLocalZOrder(zOrder);
-        this._renderCmd.setDirtyFlag(cc.Node._dirtyFlags.orderDirty);
     },
 
     /**
@@ -1507,7 +1504,7 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
         }
     },
 
-    //scene management
+    //scene managment
     /**
      * <p>
      *     Event callback that is invoked every time when CCNode enters the 'stage'.                                   <br/>
@@ -2440,7 +2437,7 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
     },
 
     _createRenderCmd: function(){
-        if(cc._renderType === cc.game.RENDER_TYPE_CANVAS)
+        if(cc._renderType === cc._RENDER_TYPE_CANVAS)
             return new cc.Node.CanvasRenderCmd(this);
         else
             return new cc.Node.WebGLRenderCmd(this);

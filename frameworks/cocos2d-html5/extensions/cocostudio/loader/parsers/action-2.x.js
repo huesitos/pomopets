@@ -24,6 +24,8 @@
 
 (function(load, baseParser){
 
+    var cache = {};
+
     var Parser = baseParser.extend({
 
         getNodeJson: function(json){
@@ -33,6 +35,8 @@
         parseNode: function(json, resourcePath, file){
             if(!json)
                 return null;
+            if(cache[file])
+                return cache[file].clone();
 
             var self = this,
                 action = new ccs.ActionTimeline();
@@ -53,7 +57,9 @@
                     action.addTimeline(frame);
             });
 
-            return action;
+            cache[file] = action;
+            cache[file].retain();
+            return action.clone();
         },
 
         deferred: function(json, resourcePath, action, file){
@@ -260,7 +266,7 @@
             handle: function(options){
                 var frame = new ccs.BlendFuncFrame();
                 var blendFunc = options["BlendFunc"];
-                if(blendFunc && blendFunc["Src"] !== undefined && blendFunc["Dst"] !== undefined)
+                if(blendFunc)
                     frame.setBlendFunc(new cc.BlendFunc(blendFunc["Src"], blendFunc["Dst"]));
                 return frame;
             }
@@ -305,6 +311,5 @@
     });
 
     load.registerParser("action", "2.*", parser);
-    load.registerParser("action", "*", parser);
 
 })(ccs._load, ccs._parser);

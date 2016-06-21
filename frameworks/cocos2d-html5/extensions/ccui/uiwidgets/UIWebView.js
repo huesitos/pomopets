@@ -101,11 +101,7 @@ ccui.WebView = ccui.Widget.extend(/** @lends ccui.WebView# */{
             if(iframe){
                 var win = iframe.contentWindow;
                 if(win && win.location)
-                    try {
-                        win.history.back.call(win);
-                    } catch (error) {
-                        win.history.back();
-                    }
+                    win.history.back.call(win);
             }
         }catch(err){
             cc.log(err);
@@ -123,11 +119,7 @@ ccui.WebView = ccui.Widget.extend(/** @lends ccui.WebView# */{
             if(iframe){
                 var win = iframe.contentWindow;
                 if(win && win.location)
-                    try {
-                        win.history.forward.call(win);
-                    } catch (error) {
-                        win.history.forward();
-                    }
+                    win.history.forward.call(win);
             }
         }catch(err){
             cc.log(err);
@@ -256,8 +248,6 @@ ccui.WebView.EventType = {
             this._div.style["-webkit-overflow"] = "auto";
             this._div.style["-webkit-overflow-scrolling"] = "touch";
             this._iframe = document.createElement("iframe");
-            this._iframe.style["width"] = "100%";
-            this._iframe.style["height"] = "100%";
             this._div.appendChild(this._iframe);
         }else{
             this._div = this._iframe = document.createElement("iframe");
@@ -291,10 +281,6 @@ ccui.WebView.EventType = {
             this.transform(this.getParentRenderCmd(), true);
             this.updateMatrix(this._worldTransform, cc.view._scaleX, cc.view._scaleY);
             this._dirtyFlag = this._dirtyFlag & cc.Node._dirtyFlags.transformDirty ^ this._dirtyFlag;
-        }
-
-        if (locFlag & flags.orderDirty) {
-            this._dirtyFlag = this._dirtyFlag & flags.orderDirty ^ this._dirtyFlag;
         }
     };
 

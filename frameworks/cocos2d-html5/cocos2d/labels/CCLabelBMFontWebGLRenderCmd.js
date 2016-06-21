@@ -46,6 +46,9 @@
         fontChar.visible = true;
     };
 
+
+    proto._updateFntFileTexture = function(){};
+
     proto._changeTextureColor = function(){};
 
     proto._updateChildrenDisplayedOpacity = function(locChild){

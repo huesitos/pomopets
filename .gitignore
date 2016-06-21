@@ -1,6 +1,6 @@
 simulator/
 android/*
-frameworks/cocos2d-x
-frameworks/runtime-src
+frameworks/cocos2d-x/*
+frameworks/runtime-src/*
 *.tps
 linux-build/

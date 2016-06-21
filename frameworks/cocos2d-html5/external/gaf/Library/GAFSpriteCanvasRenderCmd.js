@@ -199,7 +199,7 @@
             var h = Math.min(rect.height, tintedImgCache[0].height);
             var buff = renderCanvas, ctx;
             if (!buff) {
-                buff = document.createElement("canvas");
+                buff = cc.newElement("canvas");
                 buff.width = w;
                 buff.height = h;
                 ctx = buff.getContext("2d");

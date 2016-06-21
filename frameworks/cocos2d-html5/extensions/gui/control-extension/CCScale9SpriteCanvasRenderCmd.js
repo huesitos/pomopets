@@ -23,11 +23,11 @@
  ****************************************************************************/
 
 (function() {
-    ccui.Scale9Sprite.CanvasRenderCmd = function (renderable) {
+    cc.Scale9Sprite.CanvasRenderCmd = function (renderable) {
         cc.Node.CanvasRenderCmd.call(this, renderable);
         this._cachedParent = null;
         this._cacheDirty = false;
-        this._state = ccui.Scale9Sprite.state.NORMAL;
+        this._state = cc.Scale9Sprite.state.NORMAL;
 
         var node = this._node;
         var locCacheCanvas = this._cacheCanvas = cc.newElement('canvas');
@@ -42,8 +42,8 @@
         node.addChild(this._cacheSprite);
     };
 
-    var proto = ccui.Scale9Sprite.CanvasRenderCmd.prototype = Object.create(cc.Node.CanvasRenderCmd.prototype);
-    proto.constructor = ccui.Scale9Sprite.CanvasRenderCmd;
+    var proto = cc.Scale9Sprite.CanvasRenderCmd.prototype = Object.create(cc.Node.CanvasRenderCmd.prototype);
+    proto.constructor = cc.Scale9Sprite.CanvasRenderCmd;
 
     proto.visit = function(parentCmd){
         var node = this._node;
@@ -119,12 +119,12 @@
 
         //draw to cache canvas
         var selTexture = node._scale9Image.getTexture();
-        if(selTexture && this._state === ccui.Scale9Sprite.state.GRAY)
+        if(selTexture && this._state === cc.Scale9Sprite.state.GRAY)
             selTexture._switchToGray(true);
         locContext.setTransform(1, 0, 0, 1, 0, 0);
         locContext.clearRect(0, 0, sizeInPixels.width, sizeInPixels.height);
         cc.renderer._renderingToCacheCanvas(wrapper, node.__instanceId, locScaleFactor, locScaleFactor);
-        if(selTexture && this._state === ccui.Scale9Sprite.state.GRAY)
+        if(selTexture && this._state === cc.Scale9Sprite.state.GRAY)
             selTexture._switchToGray(false);
 
         if(contentSizeChanged)

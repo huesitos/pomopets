@@ -53,29 +53,6 @@
         }
     };
 
-    proto.updateStatus = function () {
-        var flags = cc.Node._dirtyFlags, locFlag = this._dirtyFlag;
-        if (locFlag & flags.orderDirty) {
-            this._cacheDirty = true;
-            if(this._updateCache === 0)
-                this._updateCache = 2;
-            this._dirtyFlag = this._dirtyFlag & flags.orderDirty ^ this._dirtyFlag;
-        }
-
-        cc.Node.RenderCmd.prototype.updateStatus.call(this);
-    };
-
-    proto._syncStatus = function (parentCmd) {
-        var flags = cc.Node._dirtyFlags, locFlag = this._dirtyFlag;
-        if (locFlag & flags.orderDirty) {
-            this._cacheDirty = true;
-            if(this._updateCache === 0)
-                this._updateCache = 2;
-            this._dirtyFlag = this._dirtyFlag & flags.orderDirty ^ this._dirtyFlag;
-        }
-        cc.Node.RenderCmd.prototype._syncStatus.call(this, parentCmd);
-    };
-
     proto.transform = function (parentCmd, recursive) {
         var wt = this._worldTransform;
         var a = wt.a, b = wt.b, c = wt.c, d = wt.d, tx = wt.tx, ty = wt.ty;
@@ -97,7 +74,7 @@
             for(var i = 0, len = children.length; i < len; i++)
                 children[i]._renderCmd._setCachedParent(this);
 
-            if (!this._bakeSprite) {
+            if (!this._bakeSprite){
                 this._bakeSprite = new cc.BakeSprite();
                 this._bakeSprite.setAnchorPoint(0,0);
             }
@@ -172,6 +149,9 @@
 
         this._syncStatus(parentCmd);
         cc.renderer.pushRenderCommand(this);
+        this._cacheDirty = true;
+        if(this._updateCache === 0)
+            this._updateCache = 2;
 
         //the bakeSprite is drawing
         this._bakeSprite.visit(this);
@@ -351,22 +331,34 @@
     };
 })();
 
+(function () {
+    cc.LayerGradient.RenderCmd = {
+        updateStatus: function () {
+            var flags = cc.Node._dirtyFlags, locFlag = this._dirtyFlag;
+            var colorDirty = locFlag & flags.colorDirty,
+                opacityDirty = locFlag & flags.opacityDirty;
+            if(colorDirty)
+                this._updateDisplayColor();
+
+            if(opacityDirty)
+                this._updateDisplayOpacity();
+
+            if(colorDirty || opacityDirty || (locFlag & flags.gradientDirty))
+                this._updateColor();
+
+            if(locFlag & flags.transformDirty)
+                //update the transform
+                this.transform(this.getParentRenderCmd(), true);
+
+            this._dirtyFlag = 0;
+        }
+    };
+})();
+
 /**
  * cc.LayerGradient's rendering objects of Canvas
  */
 (function(){
-    cc.LayerGradient.RenderCmd = {
-        updateStatus: function () {
-            var flags = cc.Node._dirtyFlags, locFlag = this._dirtyFlag;
-            if (locFlag & flags.gradientDirty) {
-                this._dirtyFlag |= flags.colorDirty;
-                this._dirtyFlag = this._dirtyFlag & flags.gradientDirty ^ this._dirtyFlag;
-            }
-
-            cc.Node.RenderCmd.prototype.updateStatus.call(this);
-        }
-    };
-
     cc.LayerGradient.CanvasRenderCmd = function(renderable){
         cc.LayerColor.CanvasRenderCmd.call(this, renderable);
         this._needDraw = true;
@@ -411,12 +403,36 @@
 
     proto._syncStatus = function (parentCmd) {
         var flags = cc.Node._dirtyFlags, locFlag = this._dirtyFlag;
-        if (locFlag & flags.gradientDirty) {
-            this._dirtyFlag |= flags.colorDirty;
-            this._dirtyFlag = locFlag & flags.gradientDirty ^ locFlag;
+        var parentNode = parentCmd ? parentCmd._node : null;
+
+        if(parentNode && parentNode._cascadeColorEnabled && (parentCmd._dirtyFlag & flags.colorDirty))
+            locFlag |= flags.colorDirty;
+
+        if(parentNode && parentNode._cascadeOpacityEnabled && (parentCmd._dirtyFlag & flags.opacityDirty))
+            locFlag |= flags.opacityDirty;
+
+        if(parentCmd && (parentCmd._dirtyFlag & flags.transformDirty))
+            locFlag |= flags.transformDirty;
+
+        var colorDirty = locFlag & flags.colorDirty,
+            opacityDirty = locFlag & flags.opacityDirty;
+
+        this._dirtyFlag = locFlag;
+
+        if (colorDirty)
+            this._syncDisplayColor();
+
+        if (opacityDirty)
+            this._syncDisplayOpacity();
+
+        if (locFlag & flags.transformDirty) {
+            //update the transform
+            this.transform(parentCmd);
         }
 
-        cc.Node.RenderCmd.prototype._syncStatus.call(this, parentCmd);
+        if (colorDirty || opacityDirty || (locFlag & flags.gradientDirty)){
+            this._updateColor();
+        }
     };
 
     proto._updateColor = function(){

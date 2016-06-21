@@ -38,13 +38,9 @@ var spine = {
 };
 
 spine.BoneData = function (name, parent) {
-    this.length = this.x = this.y = this.rotation = 0;
-    this.scaleX = this.scaleY = 1;
-
     this.name = name;
     this.parent = parent;
 };
-
 spine.BoneData.prototype = {
     length: 0,
     x: 0, y: 0,
@@ -63,9 +59,6 @@ spine.BlendMode = {
 };
 
 spine.SlotData = function (name, boneData) {
-    this.r = this.g = this.b = this.a = 1;
-    this.blendMode = spine.BlendMode.normal;
-
     this.name = name;
     this.boneData = boneData;
 };
@@ -76,8 +69,6 @@ spine.SlotData.prototype = {
 };
 
 spine.IkConstraintData = function (name) {
-    this.bendDirection = this.mix = 1;
-
     this.name = name;
     this.bones = [];
 };
@@ -88,15 +79,6 @@ spine.IkConstraintData.prototype = {
 };
 
 spine.Bone = function (boneData, skeleton, parent) {
-    this.x = this.y = this.rotation = this.rotationIK = 0;
-    this.scaleX = this.scaleY = 1;
-    this.flipX = this.flipY = false;
-    this.m00 = this.m01 = this.worldX = 0; // a b x
-    this.m10 = this.m11= this.worldY = 0; // c d y
-    this.worldRotation = 0;
-    this.worldScaleX = this.worldScaleY = 1;
-    this.worldFlipX = this.worldFlipY = false;
-
     this.data = boneData;
     this.skeleton = skeleton;
     this.parent = parent;
@@ -186,9 +168,6 @@ spine.Bone.prototype = {
 };
 
 spine.Slot = function (slotData, bone) {
-    this.r = this.g = this.b = this.a = 1;
-    this._attachmentTime = 0;
-
     this.data = slotData;
     this.bone = bone;
     this.setToSetupPose();
@@ -475,8 +454,6 @@ spine.Curves.prototype = {
 };
 
 spine.RotateTimeline = function (frameCount) {
-    this.boneIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, angle, ...
     this.frames.length = frameCount * 2;
@@ -529,8 +506,6 @@ spine.RotateTimeline.prototype = {
 };
 
 spine.TranslateTimeline = function (frameCount) {
-    this.boneIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, x, y, ...
     this.frames.length = frameCount * 3;
@@ -572,8 +547,6 @@ spine.TranslateTimeline.prototype = {
 };
 
 spine.ScaleTimeline = function (frameCount) {
-    this.boneIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, x, y, ...
     this.frames.length = frameCount * 3;
@@ -615,8 +588,6 @@ spine.ScaleTimeline.prototype = {
 };
 
 spine.ColorTimeline = function (frameCount) {
-    this.boneIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, r, g, b, a, ...
     this.frames.length = frameCount * 5;
@@ -678,8 +649,6 @@ spine.ColorTimeline.prototype = {
 };
 
 spine.AttachmentTimeline = function (frameCount) {
-    this.slotIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, ...
     this.frames.length = frameCount;
@@ -796,8 +765,6 @@ spine.DrawOrderTimeline.prototype = {
 };
 
 spine.FfdTimeline = function (frameCount) {
-    this.slotIndex = this.attachment = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = [];
     this.frames.length = frameCount;
@@ -864,8 +831,6 @@ spine.FfdTimeline.prototype = {
 };
 
 spine.IkConstraintTimeline = function (frameCount) {
-    this.ikConstraintIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, mix, bendDirection, ...
     this.frames.length = frameCount * 3;
@@ -907,8 +872,6 @@ spine.IkConstraintTimeline.prototype = {
 };
 
 spine.FlipXTimeline = function (frameCount) {
-    this.boneIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, flip, ...
     this.frames.length = frameCount * 2;
@@ -937,8 +900,6 @@ spine.FlipXTimeline.prototype = {
 };
 
 spine.FlipYTimeline = function (frameCount) {
-    this.boneIndex = 0;
-
     this.curves = new spine.Curves(frameCount);
     this.frames = []; // time, flip, ...
     this.frames.length = frameCount * 2;
@@ -967,8 +928,6 @@ spine.FlipYTimeline.prototype = {
 };
 
 spine.SkeletonData = function () {
-    this.width = this.height = 0;
-
     this.bones = [];
     this.slots = [];
     this.skins = [];
@@ -1041,11 +1000,6 @@ spine.SkeletonData.prototype = {
 };
 
 spine.Skeleton = function (skeletonData) {
-    this.x = this.y = 0;
-    this.r = this.g = this.b = this.a = 1;
-    this.time = 0;
-    this.flipX = this.flipY = false;
-
     this.data = skeletonData;
 
     this.bones = [];
@@ -1262,8 +1216,6 @@ spine.Skeleton.prototype = {
 };
 
 spine.EventData = function (name) {
-    this.intValue = this.floatValue = 0;
-
     this.name = name;
 };
 spine.EventData.prototype = {
@@ -1273,8 +1225,6 @@ spine.EventData.prototype = {
 };
 
 spine.Event = function (data) {
-    this.intValue = this.floatValue = 0;
-
     this.data = data;
 };
 spine.Event.prototype = {
@@ -1291,13 +1241,6 @@ spine.AttachmentType = {
 };
 
 spine.RegionAttachment = function (name) {
-    this.type = spine.AttachmentType.region;
-    this.x = this.y = this.rotation = 0;
-    this.scaleX = this.scaleY = 1;
-    this.width = this.height = 0;
-    this.r = this.g = this.b = this.a = 1;
-    this.regionOffsetX = this.regionOffsetY = this.regionWidth = this.regionHeight = this.regionOriginalWidth = this.regionOriginalHeight = 0;
-
     this.name = name;
     this.offset = [];
     this.offset.length = 8;
@@ -1305,6 +1248,7 @@ spine.RegionAttachment = function (name) {
     this.uvs.length = 8;
 };
 spine.RegionAttachment.prototype = {
+    type: spine.AttachmentType.region,
     x: 0, y: 0,
     rotation: 0,
     scaleX: 1, scaleY: 1,
@@ -1382,17 +1326,10 @@ spine.RegionAttachment.prototype = {
 };
 
 spine.MeshAttachment = function (name) {
-    this.type = spine.AttachmentType.mesh;
-    this.hullLength = 0;
-    this.r = this.g = this.b = this.a = 1;
-    this.regionU = this.regionV = this.regionV2 = 0;
-    this.regionRotate = false;
-    this.regionOffsetX = this.regionOffsetY = this.regionWidth = this.regionHeight = this.regionOriginalWidth = this.regionOriginalHeight = 0;
-    this.width = this.height = 0;
-
     this.name = name;
 };
 spine.MeshAttachment.prototype = {
+    type: spine.AttachmentType.mesh,
     vertices: null,
     uvs: null,
     regionUVs: null,
@@ -1443,17 +1380,10 @@ spine.MeshAttachment.prototype = {
 };
 
 spine.SkinnedMeshAttachment = function (name) {
-    this.type = spine.AttachmentType.skinnedmesh;
-    this.hullLength = 0;
-    this.r = this.g = this.b = this.a = 1;
-    this.regionU = this.regionV = this.regionU2 = this.regionV2 = 0;
-    this.regionRotate = false;
-    this.regionOffsetX = this.regionOffsetY = this.regionWidth = this.regionHeight = this.regionOriginalWidth = this.regionOriginalHeight = 0;
-    this.width = this.height = 0;
-
     this.name = name;
 };
 spine.SkinnedMeshAttachment.prototype = {
+    type: spine.AttachmentType.skinnedmesh,
     bones: null,
     weights: null,
     uvs: null,
@@ -1532,12 +1462,11 @@ spine.SkinnedMeshAttachment.prototype = {
 };
 
 spine.BoundingBoxAttachment = function (name) {
-    this.type = spine.AttachmentType.boundingbox;
-
     this.name = name;
     this.vertices = [];
 };
 spine.BoundingBoxAttachment.prototype = {
+    type: spine.AttachmentType.boundingbox,
     computeWorldVertices: function (x, y, bone, worldVertices) {
         x += bone.worldX;
         y += bone.worldY;
@@ -1555,8 +1484,6 @@ spine.BoundingBoxAttachment.prototype = {
 spine.AnimationStateData = function (skeletonData) {
     this.skeletonData = skeletonData;
     this.animationToMixTime = {};
-
-    this.defaultMix = 0;
 };
 spine.AnimationStateData.prototype = {
     defaultMix: 0,
@@ -1576,13 +1503,7 @@ spine.AnimationStateData.prototype = {
     }
 };
 
-spine.TrackEntry = function () {
-    this.delay = this.time = this.endTime = 0;
-    this.lastTime = -1;
-    this.timeScale = 1;
-    this.mixTime = this.mixDuration = 1;
-    this.mix = 1;
-};
+spine.TrackEntry = function () {};
 spine.TrackEntry.prototype = {
     next: null, previous: null,
     animation: null,
@@ -1594,8 +1515,6 @@ spine.TrackEntry.prototype = {
 };
 
 spine.AnimationState = function (stateData) {
-    this.timeScale = 1;
-
     this.data = stateData;
     this.tracks = [];
     this.events = [];
@@ -1776,8 +1695,6 @@ spine.AnimationState.prototype = {
 };
 
 spine.SkeletonJson = function (attachmentLoader) {
-    this.scale = 1;
-
     this.attachmentLoader = attachmentLoader;
 };
 spine.SkeletonJson.prototype = {
@@ -2271,7 +2188,7 @@ spine.SkeletonJson.prototype = {
             timeline.curves.setCurve(frameIndex, curve[0], curve[1], curve[2], curve[3]);
     },
     toColor: function (hexString, colorIndex) {
-        if (hexString.length != 8) throw new Error("Color hexadecimal length must be 8, received: " + hexString);
+        if (hexString.length != 8) throw new Error("Color hexidecimal length must be 8, recieved: " + hexString);
         return parseInt(hexString.substring(colorIndex * 2, (colorIndex * 2) + 2), 16) / 255;
     },
     getFloatArray: function (map, name, scale) {
@@ -2448,9 +2365,7 @@ spine.Atlas.TextureWrap = {
     repeat: 2
 };
 
-spine.AtlasPage = function () {
-    this.width = this.height = 0;
-};
+spine.AtlasPage = function () {};
 spine.AtlasPage.prototype = {
     name: null,
     format: null,
@@ -2463,13 +2378,7 @@ spine.AtlasPage.prototype = {
     height: 0
 };
 
-spine.AtlasRegion = function () {
-    this.x = this.y = this.width = this.height =
-        this.u = this.v = this.u2 = this.v2 =
-            this.offsetX = this.offsetY =
-                this.originalWidth = this.originalHeight = 0;
-    this.index = 0;
-};
+spine.AtlasRegion = function () {};
 spine.AtlasRegion.prototype = {
     page: null,
     name: null,
@@ -2485,8 +2394,6 @@ spine.AtlasRegion.prototype = {
 };
 
 spine.AtlasReader = function (text) {
-    this.index = 0;
-
     this.lines = text.split(/\r\n|\r|\n/);
 };
 spine.AtlasReader.prototype = {
@@ -2581,8 +2488,6 @@ spine.AtlasAttachmentLoader.prototype = {
 };
 
 spine.SkeletonBounds = function () {
-    this.minX = this.minY = this.maxX = this.maxY = 0;
-
     this.polygonPool = [];
     this.polygons = [];
     this.boundingBoxes = [];

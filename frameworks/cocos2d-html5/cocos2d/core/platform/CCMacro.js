@@ -444,30 +444,23 @@ cc.MIRRORED_REPEAT   = 0x8370;
 /**
  * default gl blend src function. Compatible with premultiplied alpha images.
  * @constant
- * @name cc.BLEND_SRC
  * @type Number
  */
-cc.BLEND_SRC = cc.SRC_ALPHA;
-cc.game.addEventListener(cc.game.EVENT_RENDERER_INITED, function () {
-    if (cc._renderType === cc.game.RENDER_TYPE_WEBGL
-         && cc.OPTIMIZE_BLEND_FUNC_FOR_PREMULTIPLIED_ALPHA) {
-        cc.BLEND_SRC = cc.ONE;
-    }
-});
+cc.BLEND_SRC = (cc._renderType === cc._RENDER_TYPE_WEBGL && cc.OPTIMIZE_BLEND_FUNC_FOR_PREMULTIPLIED_ALPHA) ? cc.ONE : cc.SRC_ALPHA;
 
 /**
  * default gl blend dst function. Compatible with premultiplied alpha images.
  * @constant
  * @type Number
  */
-cc.BLEND_DST = cc.ONE_MINUS_SRC_ALPHA;
+cc.BLEND_DST = 0x0303;
 
 /**
  * Check webgl error.Error will be shown in console if exists.
  * @function
  */
 cc.checkGLErrorDebug = function () {
-    if (cc.renderMode === cc.game.RENDER_TYPE_WEBGL) {
+    if (cc.renderMode === cc._RENDER_TYPE_WEBGL) {
         var _error = cc._renderContext.getError();
         if (_error) {
             cc.log(cc._LogInfos.checkGLErrorDebug, _error);
@@ -566,7 +559,7 @@ cc.VERTEX_ATTRIB_TEX_COORDS = 2;
  * @constant
  * @type {Number}
  */
-cc.VERTEX_ATTRIB_MAX = 7;
+cc.VERTEX_ATTRIB_MAX = 3;
 
 //------------Uniforms------------------
 /**
@@ -625,27 +618,12 @@ cc.SHADER_POSITION_TEXTURECOLOR = "ShaderPositionTextureColor";
  * @constant
  * @type {String}
  */
-cc.SHADER_SPRITE_POSITION_TEXTURECOLOR = "ShaderSpritePositionTextureColor";
-/**
- * @constant
- * @type {String}
- */
 cc.SHADER_POSITION_TEXTURECOLORALPHATEST = "ShaderPositionTextureColorAlphaTest";
 /**
  * @constant
  * @type {String}
  */
-cc.SHADER_SPRITE_POSITION_TEXTURECOLORALPHATEST = "ShaderSpritePositionTextureColorAlphaTest";
-/**
- * @constant
- * @type {String}
- */
 cc.SHADER_POSITION_COLOR = "ShaderPositionColor";
-/**
- * @constant
- * @type {String}
- */
-cc.SHADER_SPRITE_POSITION_COLOR = "ShaderSpritePositionColor";
 /**
  * @constant
  * @type {String}
@@ -735,11 +713,6 @@ cc.ATTRIBUTE_NAME_POSITION = "a_position";
  * @type {String}
  */
 cc.ATTRIBUTE_NAME_TEX_COORD = "a_texCoord";
-/**
- * @constant
- * @type {String}
- */
-cc.ATTRIBUTE_NAME_MVMAT = "a_mvMatrix";
 
 
 /**
@@ -805,7 +778,7 @@ cc.arrayVerifyType = function (arr, type) {
 };
 
 /**
- * Searches for the first occurrence of object and removes it. If object is not found the function has no effect.
+ * Searches for the first occurance of object and removes it. If object is not found the function has no effect.
  * @function
  * @param {Array} arr Source Array
  * @param {*} delObj  remove object

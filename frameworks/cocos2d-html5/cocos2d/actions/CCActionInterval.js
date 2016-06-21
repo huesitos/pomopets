@@ -208,7 +208,7 @@ cc.ActionInterval = cc.FiniteTimeAction.extend(/** @lends cc.ActionInterval# */{
      * returns a reversed action. <br />
      * Will be overwrite.
      *
-     * @return {?cc.Action}
+     * @return {null}
      */
     reverse:function () {
         cc.log("cc.IntervalAction: reverse not implemented.");
@@ -1121,7 +1121,6 @@ cc.RotateTo = cc.ActionInterval.extend(/** @lends cc.RotateTo# */{
     /**
      * RotateTo reverse not implemented.
      * Will be overridden.
-     * @returns {cc.Action}
      */
     reverse:function () {
         cc.log("cc.RotateTo.reverse(): it should be overridden in subclass.");

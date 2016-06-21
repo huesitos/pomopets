@@ -126,7 +126,7 @@ cc.screen = /** @lends cc.screen# */{
                 document.removeEventListener(eventName, this._preOnFullScreenChange);
             }
             this._preOnFullScreenChange = onFullScreenChange;
-            document.addEventListener(eventName, onFullScreenChange, false);
+            cc._addEventListener(document, eventName, onFullScreenChange, false);
         }
 
         return element[this._fn.requestFullscreen]();
@@ -147,15 +147,15 @@ cc.screen = /** @lends cc.screen# */{
      */
     autoFullScreen: function (element, onFullScreenChange) {
         element = element || document.body;
-        var touchTarget = cc.game.canvas || element;
+        var touchTarget = cc._canvas || element;
         var theScreen = this;
         // Function bind will be too complicated here because we need the callback function's reference to remove the listener
         function callback() {
-            touchTarget.removeEventListener(theScreen._touchEvent, callback);
             theScreen.requestFullScreen(element, onFullScreenChange);
+            touchTarget.removeEventListener(theScreen._touchEvent, callback);
         }
         this.requestFullScreen(element, onFullScreenChange);
-        touchTarget.addEventListener(this._touchEvent, callback);
+        cc._addEventListener(touchTarget, this._touchEvent, callback);
     }
 };
 cc.screen.init();

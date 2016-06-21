@@ -23,7 +23,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
+ 
 cc.g_NumberOfDraws = 0;
 
 cc.GLToClipTransform = function (transformOut) {
@@ -83,9 +83,16 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
     _animationInterval: 0.0,
     _oldAnimationInterval: 0.0,
     _projection: 0,
+    _accumDt: 0.0,
     _contentScaleFactor: 1.0,
 
+    _displayStats: false,
     _deltaTime: 0.0,
+    _frameRate: 0.0,
+
+    _FPSLabel: null,
+    _SPFLabel: null,
+    _drawsLabel: null,
 
     _winSizeInPoints: null,
 
@@ -97,6 +104,7 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
     _projectionDelegate: null,
     _runningScene: null,
 
+    _frames: 0,
     _totalFrames: 0,
     _secondsPerFrame: 0,
 
@@ -105,9 +113,9 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
     _scheduler: null,
     _actionManager: null,
     _eventProjectionChanged: null,
-    _eventAfterUpdate: null,
-    _eventAfterVisit: null,
     _eventAfterDraw: null,
+    _eventAfterVisit: null,
+    _eventAfterUpdate: null,
 
     ctor: function () {
         var self = this;
@@ -126,8 +134,11 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
         // projection delegate if "Custom" projection is used
         this._projectionDelegate = null;
 
-        // FPS
-        this._totalFrames = 0;
+        //FPS
+        this._accumDt = 0;
+        this._frameRate = 0;
+        this._displayStats = false;//can remove
+        this._totalFrames = this._frames = 0;
         this._lastUpdate = Date.now();
 
         //Paused?
@@ -151,12 +162,12 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
             this._actionManager = null;
         }
 
-        this._eventAfterUpdate = new cc.EventCustom(cc.Director.EVENT_AFTER_UPDATE);
-        this._eventAfterUpdate.setUserData(this);
-        this._eventAfterVisit = new cc.EventCustom(cc.Director.EVENT_AFTER_VISIT);
-        this._eventAfterVisit.setUserData(this);
         this._eventAfterDraw = new cc.EventCustom(cc.Director.EVENT_AFTER_DRAW);
         this._eventAfterDraw.setUserData(this);
+        this._eventAfterVisit = new cc.EventCustom(cc.Director.EVENT_AFTER_VISIT);
+        this._eventAfterVisit.setUserData(this);
+        this._eventAfterUpdate = new cc.EventCustom(cc.Director.EVENT_AFTER_UPDATE);
+        this._eventAfterUpdate.setUserData(this);
         this._eventProjectionChanged = new cc.EventCustom(cc.Director.EVENT_PROJECTION_CHANGED);
         this._eventProjectionChanged.setUserData(this);
 
@@ -208,7 +219,6 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
      */
     drawScene: function () {
         var renderer = cc.renderer;
-
         // calculate "global" dt
         this.calculateDeltaTime();
 
@@ -217,6 +227,8 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
             this._scheduler.update(this._deltaTime);
             cc.eventManager.dispatchEvent(this._eventAfterUpdate);
         }
+
+        renderer.clear();
 
         /* to avoid flickr, nextScene MUST be here: after tick and before draw.
          XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
@@ -231,34 +243,31 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
         if (this._runningScene) {
             if (renderer.childrenOrderDirty === true) {
                 cc.renderer.clearRenderCommands();
-                cc.renderer.assignedZ = 0;
                 this._runningScene._renderCmd._curLevel = 0;                          //level start from 0;
                 this._runningScene.visit();
                 renderer.resetFlag();
-            } 
-            else if (renderer.transformDirty() === true) {
+            } else if (renderer.transformDirty() === true)
                 renderer.transform();
-            }
-        }
 
-        renderer.clear();
+            cc.eventManager.dispatchEvent(this._eventAfterVisit);
+        }
 
         // draw the notifications node
         if (this._notificationNode)
             this._notificationNode.visit();
 
-        cc.eventManager.dispatchEvent(this._eventAfterVisit);
-        cc.g_NumberOfDraws = 0;
+        if (this._displayStats)
+            this._showStats();
 
         if (this._afterVisitScene)
             this._afterVisitScene();
 
         renderer.rendering(cc._renderContext);
+        cc.eventManager.dispatchEvent(this._eventAfterDraw);
         this._totalFrames++;
 
-        cc.eventManager.dispatchEvent(this._eventAfterDraw);
-
-        this._calculateMPF();
+        if (this._displayStats)
+            this._calculateMPF();
     },
 
     _beforeVisitScene: null,
@@ -483,6 +492,7 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
     setContentScaleFactor: function (scaleFactor) {
         if (scaleFactor !== this._contentScaleFactor) {
             this._contentScaleFactor = scaleFactor;
+            this._createStatsLabel();
         }
     },
 
@@ -498,7 +508,7 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
      * set color for clear screen.<br/>
      * Implementation can be found in CCDirectorCanvas.js/CCDirectorWebGL.js
      * @function
-     * @param {cc.Color} clearColor
+     * @param {cc.color} clearColor
      */
     setClearColor: null,
     /**
@@ -555,17 +565,9 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
      * @param {cc.Node} node
      */
     setNotificationNode: function (node) {
-        cc.renderer.childrenOrderDirty = true;
-        if(this._notificationNode){
-            this._notificationNode.onExitTransitionDidStart();
-            this._notificationNode.onExit();
-            this._notificationNode.cleanup();
-        }
         this._notificationNode = node;
         if(!node)
-            return;
-        this._notificationNode.onEnter();
-        this._notificationNode.onEnterTransitionDidFinish();
+            cc.renderer.childrenOrderDirty = true;
     },
 
     /**
@@ -631,6 +633,28 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
      */
     setAlphaBlending: null,
 
+    _showStats: function () {
+        this._frames++;
+        this._accumDt += this._deltaTime;
+        if (this._FPSLabel && this._SPFLabel && this._drawsLabel) {
+            if (this._accumDt > cc.DIRECTOR_FPS_INTERVAL) {
+                this._SPFLabel.string = this._secondsPerFrame.toFixed(3);
+
+                this._frameRate = this._frames / this._accumDt;
+                this._frames = 0;
+                this._accumDt = 0;
+
+                this._FPSLabel.string = this._frameRate.toFixed(1);
+                this._drawsLabel.string = (0 | cc.g_NumberOfDraws).toString();
+            }
+            this._FPSLabel.visit();
+            this._SPFLabel.visit();
+            this._drawsLabel.visit();
+        } else
+            this._createStatsLabel();
+        cc.g_NumberOfDraws = 0;
+    },
+
     /**
      * Returns whether or not the replaced scene will receive the cleanup message.<br>
      * If the new scene is pushed, then the old scene won't receive the "cleanup" message.<br/>
@@ -662,7 +686,7 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
      * @return {Boolean}
      */
     isDisplayStats: function () {
-        return cc.profiler ? cc.profiler.isShowingStats() : false;
+        return this._displayStats;
     },
 
     /**
@@ -670,9 +694,7 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
      * @param {Boolean} displayStats
      */
     setDisplayStats: function (displayStats) {
-        if (cc.profiler) {
-            displayStats ? cc.profiler.showStats() : cc.profiler.hideStats();
-        }
+        this._displayStats = displayStats;
     },
 
     /**
@@ -729,12 +751,12 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
         var locScenesStack = this._scenesStack;
         var c = locScenesStack.length;
 
-        if (level === 0) {
+        if (c === 0) {
             this.end();
             return;
         }
-        // stack overflow
-        if (level >= c)
+        // current level or lower -> nothing
+        if (level > c)
             return;
 
         // pop stack until reaching desired level
@@ -748,7 +770,7 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
             c--;
         }
         this._nextScene = locScenesStack[locScenesStack.length - 1];
-        this._sendCleanupToScene = true;
+        this._sendCleanupToScene = false;
     },
 
     /**
@@ -794,6 +816,8 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
         return this._deltaTime;
     },
 
+    _createStatsLabel: null,
+
     _calculateMPF: function () {
         var now = Date.now();
         this._secondsPerFrame = (now - this._lastUpdate) / 1000;
@@ -812,15 +836,15 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
 cc.Director.EVENT_PROJECTION_CHANGED = "director_projection_changed";
 
 /**
- * The event after update of cc.Director
+ * The event after draw of cc.Director
  * @constant
  * @type {string}
  * @example
- *   cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_UPDATE, function(event) {
- *           cc.log("after update event.");
+ *   cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_DRAW, function(event) {
+ *           cc.log("after draw event.");
  *       });
  */
-cc.Director.EVENT_AFTER_UPDATE = "director_after_update";
+cc.Director.EVENT_AFTER_DRAW = "director_after_draw";
 
 /**
  * The event after visit of cc.Director
@@ -834,15 +858,15 @@ cc.Director.EVENT_AFTER_UPDATE = "director_after_update";
 cc.Director.EVENT_AFTER_VISIT = "director_after_visit";
 
 /**
- * The event after draw of cc.Director
+ * The event after update of cc.Director
  * @constant
  * @type {string}
  * @example
- *   cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_DRAW, function(event) {
- *           cc.log("after draw event.");
+ *   cc.eventManager.addCustomListener(cc.Director.EVENT_AFTER_UPDATE, function(event) {
+ *           cc.log("after update event.");
  *       });
  */
-cc.Director.EVENT_AFTER_DRAW = "director_after_draw";
+cc.Director.EVENT_AFTER_UPDATE = "director_after_update";
 
 /***************************************************
  * implementation of DisplayLinkDirector
