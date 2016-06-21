@@ -48,7 +48,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         foodBtn.setUserData(foodBtnAnimInfo);
-        foodBtn.isVisible(false);
+        foodBtn.setVisible(false);
         this.addChild(foodBtn, 0);
         
         // outfit
@@ -65,7 +65,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         outfitBtn.setUserData(outfitBtnAnimInfo);
-        outfitBtn.isVisible(false);
+        outfitBtn.setVisible(false);
         this.addChild(outfitBtn, 0);
         
         // pets
@@ -82,7 +82,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         petsBtn.setUserData(petsBtnAnimInfo);
-        petsBtn.isVisible(false);
+        petsBtn.setVisible(false);
         this.addChild(petsBtn, 0);
         
         // sleep
@@ -99,7 +99,7 @@ var PetUILayer = cc.Layer.extend({
             clickable: false
         }
         sleepBtn.setUserData(sleepBtnAnimInfo);
-        sleepBtn.isVisible(false);
+        sleepBtn.setVisible(false);
         this.addChild(sleepBtn, 0);
         
         var petOptionsBtns = [

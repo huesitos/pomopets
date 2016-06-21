@@ -1,25 +1,44 @@
-var petAnimator = {
-    animatePetStandBy: function (pet) {
-        var standByFrames = [];
+var PetAnimatorSingleton = (function() {
+    var instance;
+    
+    function PetAnimator() {
+        this.animatePetStandBy = function (pet) {
+            var standByFrames = [];
 
-        for (var i = 1; i <= 3; i++) {
-            var name = "pet-sprite" + i + ".png";
-            var frame = cc.spriteFrameCache.getSpriteFrame(name);
+            for (var i = 1; i <= 3; i++) {
+                var name = "pet-sprite" + i + ".png";
+                var frame = cc.spriteFrameCache.getSpriteFrame(name);
 
-            standByFrames.push(frame);
+                standByFrames.push(frame);
+            }
+            // go back to the initial frame
+            standByFrames.push(cc.spriteFrameCache.getSpriteFrame("pet-sprite1.png"))
+
+            var standByAnimation = new cc.Animation(standByFrames, 0.2);
+            var petStandByAnimation = new cc.Animate(standByAnimation);
+            var delay = new cc.DelayTime(5);
+            var sequence = new cc.Sequence(
+                delay, 
+                petStandByAnimation
+            );
+
+            pet.runAction(new cc.RepeatForever(sequence));
         }
-
-        // go back to the initial frame
-        standByFrames.push(cc.spriteFrameCache.getSpriteFrame("pet-sprite1.png"))
-
-        var standByAnimation = new cc.Animation(standByFrames, 0.2);
-        var petStandByAnimation = new cc.Animate(standByAnimation);
-        var delay = new cc.DelayTime(5);
-        var sequence = new cc.Sequence(
-            delay, 
-            petStandByAnimation
-        );
-
-        pet.runAction(new cc.RepeatForever(sequence));
     }
-};
+    
+    function createInstance() {
+        var animator = new PetAnimator();
+        return animator;
+    }
+
+    return {
+        getInstance: function () {
+            if(!instance) {
+                instance = createInstance();
+            }
+            return instance;
+        }
+    }
+})();
+
+var petAnimator = PetAnimatorSingleton.getInstance();
