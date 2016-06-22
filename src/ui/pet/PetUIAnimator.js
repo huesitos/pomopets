@@ -67,8 +67,7 @@ var PetUIAnimatorSingleton =  (function () {
     }
     
     function createInstance() {
-        var animator = new PetUIAnimator();
-        return animator;
+        return new PetUIAnimator();
     }
 
     return {

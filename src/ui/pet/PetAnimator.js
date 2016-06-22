@@ -27,8 +27,7 @@ var PetAnimatorSingleton = (function() {
     }
     
     function createInstance() {
-        var animator = new PetAnimator();
-        return animator;
+        return new PetAnimator();
     }
 
     return {

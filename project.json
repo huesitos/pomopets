@@ -21,6 +21,7 @@
         "src/ui/UILayer.js",
         "src/ui/UIAnimator.js",
         "src/ui/Utils.js",
+        "src/engine/pomodoro/PomodoroManager.js",
         "src/Resource.js"
     ]
 }

@@ -6,7 +6,9 @@ var PomodoroUILayer = cc.Layer.extend({
 
         // ask the window size
         var size = cc.winSize;
-
+        
+        this.pomodoroManager = pomodoroManager;
+        
         /////////////////////////////
         // 2. add buttons
         
@@ -62,7 +64,7 @@ var PomodoroUILayer = cc.Layer.extend({
         // 3. time label
         
         this.timeLabel = new cc.LabelTTF(
-            "25:00",
+            pomodoroManager.getPomodoroTimeString(),
             getFontName(fonts.mainTextFont),
             fontsSettings.timeLabelSize
         );
@@ -77,12 +79,14 @@ var PomodoroUILayer = cc.Layer.extend({
     },
     moreTimeBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
-            cc.log("more");
+            pomodoroManager.addPomodoroTime();
+            this.resetPomodoroTimeLabel();
         }
     },
     lessTimeBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
-            cc.log("less");
+            pomodoroManager.subtractPomodoroTime();
+            this.resetPomodoroTimeLabel();
         }
     },
     startBtnTouch: function (sender, type) {
@@ -94,5 +98,10 @@ var PomodoroUILayer = cc.Layer.extend({
         if (type == ccui.Widget.TOUCH_ENDED) {
             cc.log("categories");
         }
+    },
+    resetPomodoroTimeLabel: function() {
+        this.timeLabel.setString(
+            pomodoroManager.getPomodoroTimeString()
+        );
     }
 });

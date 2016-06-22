@@ -57,8 +57,7 @@ var UIAnimatorSingleton = (function (){
     
     
     function createInstance() {
-        var animator = new UIAnimator();
-        return animator;
+        return new UIAnimator();
     }
 
     return {
