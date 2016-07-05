@@ -6,6 +6,9 @@ var PomodoroManagerSingleton = (function () {
         var MAX_POMODORO_TIME = 60;
         var pomodoroTime;
         
+        var remainingMins,
+            remainingSecs;
+        
         function loadPomodoroTime() {
             var time = cc.sys.localStorage.getItem(
                 JSON.stringify("pomodoroTime")
@@ -26,7 +29,12 @@ var PomodoroManagerSingleton = (function () {
         }
         
         this.getPomodoroTimeString = function () {
-            return pomodoroTime.toString() + ":00";
+            var time = pomodoroTime.toString() + ":00";
+            
+            if (pomodoroTime < 10)
+                time = "0" + time;
+            
+            return time;
         }
         
         this.getPomodoroTime = function () {
@@ -47,6 +55,42 @@ var PomodoroManagerSingleton = (function () {
                 
                 savePomodoroTime();
             }
+        }
+        
+        this.startPomodoro = function () {
+            // transform the time so seconds are counted
+            remainingMins = pomodoroTime;
+            remainingSecs = 0;
+            
+            // launch event pomodoro started
+        }
+        
+        this.pomodoroTick = function () {
+            // if a minute is over, then start counting again from 59
+            // if it isn't, then subtract one second
+            if (remainingSecs === 0) {
+                remainingMins -= 1;
+                remainingSecs = 59;
+            } else {
+                remainingSecs -= 1;
+            }
+            
+            if(remainingMins === 0) {
+                // launch event pomodoro ended
+            }
+        }
+        
+        this.getPomodoroRemainingTime = function () {
+            var mins = remainingMins.toString();
+            var secs = remainingSecs.toString();
+            
+            if (mins < 10)
+                mins = "0" + mins;
+            
+            if (secs < 10)
+                secs = "0" + secs;
+            
+            return mins + ":" + secs;
         }
     }
     
