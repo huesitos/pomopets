@@ -80,18 +80,23 @@ var PomodoroUILayer = cc.Layer.extend({
     moreTimeBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
             pomodoroManager.addPomodoroTime();
-            this.resetPomodoroTimeLabel();
+            this.updatePomodoroTimeLabel(
+                pomodoroManager.getPomodoroTimeString()
+            );
         }
     },
     lessTimeBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
             pomodoroManager.subtractPomodoroTime();
-            this.resetPomodoroTimeLabel();
+            this.updatePomodoroTimeLabel(
+                pomodoroManager.getPomodoroTimeString()
+            );
         }
     },
     startBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
-            cc.log("start");
+            pomodoroManager.startPomodoro();
+            this.schedule(this.runPomodoro, 1);
         }
     },
     categoriesBtnTouch: function (sender, type) {
@@ -99,9 +104,16 @@ var PomodoroUILayer = cc.Layer.extend({
             cc.log("categories");
         }
     },
-    resetPomodoroTimeLabel: function() {
+    updatePomodoroTimeLabel: function (time) {
         this.timeLabel.setString(
-            pomodoroManager.getPomodoroTimeString()
+            time
+        );
+    },
+    runPomodoro: function (dt) {
+        // do this with events??
+        pomodoroManager.pomodoroTick();
+        this.updatePomodoroTimeLabel(
+            pomodoroManager.getPomodoroRemainingTime()
         );
     }
 });
