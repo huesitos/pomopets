@@ -4,6 +4,8 @@ var PomodoroManagerSingleton = (function () {
     function PomodoroManager() {
         var MIN_POMODORO_TIME = 5;
         var MAX_POMODORO_TIME = 60;
+        
+        var pomodoroRunning = false;
         var pomodoroTime;
         
         var remainingMins,
@@ -61,8 +63,20 @@ var PomodoroManagerSingleton = (function () {
             // transform the time so seconds are counted
             remainingMins = pomodoroTime;
             remainingSecs = 0;
+            pomodoroRunning = true;
             
-            // launch event pomodoro started
+            pomodoroEvents.dispatchPomodoroStarted();
+        }
+        
+        this.stopPomodoro = function () {
+            // stop the pomodoro before it finishes
+            pomodoroRunning = false;
+            
+            pomodoroEvents.dispatchPomodoroStopped();
+        }
+        
+        this.endPomodoro = function () {
+            // stop the pomodoro when time reaches 0
         }
         
         this.pomodoroTick = function () {
@@ -77,6 +91,7 @@ var PomodoroManagerSingleton = (function () {
             
             if(remainingMins === 0) {
                 // launch event pomodoro ended
+                pomodoroRunning = false;
             }
         }
         
@@ -91,6 +106,10 @@ var PomodoroManagerSingleton = (function () {
                 secs = "0" + secs;
             
             return mins + ":" + secs;
+        }
+        
+        this.isPomodoroRunning = function () {
+            return pomodoroRunning;
         }
     }
     

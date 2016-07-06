@@ -7,6 +7,9 @@ var PetUILayer = cc.Layer.extend({
         // ask the window size
         var size = cc.winSize;
         
+        // set ui enabled
+        this.uiEnabled = true;
+        
         //////////////////////////////
         // 2. add pet
         
@@ -128,7 +131,7 @@ var PetUILayer = cc.Layer.extend({
                     var petRect = this.petSprite.getBoundingBox();
                     var point = touch.getLocation();
                     
-                    if (cc.rectContainsPoint(petRect, point)) {
+                    if (cc.rectContainsPoint(petRect, point) && this.uiEnabled) {
                         if (this.petMenuShowing) {
                             this.hidePetOptions();
                         } else {
@@ -149,7 +152,7 @@ var PetUILayer = cc.Layer.extend({
                     var petRect = this.petSprite.getBoundingBox();
                     var point = touch.getLocation();
                     
-                    if (cc.rectContainsPoint(petRect, point)) {
+                    if (cc.rectContainsPoint(petRect, point) && this.uiEnabled) {
                         if (this.petMenuShowing) {
                             this.hidePetOptions();
                         } else {
@@ -161,6 +164,19 @@ var PetUILayer = cc.Layer.extend({
                 }
             }, this);
         }
+        
+        //////////////////////////////
+        // 6. add pomodoro event listener
+        
+        this.lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
+            this.toggleUI.bind(this)
+        );  
+        this.lPomodoroStopped = pomodoroEvents.listenerToPomodoroStopped(
+            this.toggleUI.bind(this)
+        );
+        
+        cc.eventManager.addListener(this.lPomodoroStarted, 1);
+        cc.eventManager.addListener(this.lPomodoroStopped, 1);
         
         return true;
     },
@@ -195,5 +211,8 @@ var PetUILayer = cc.Layer.extend({
         if (type == ccui.Widget.TOUCH_ENDED && clickable) {
             cc.log("let me sleep!");
         }
+    },
+    toggleUI: function () {
+        this.uiEnabled = !this.uiEnabled;
     }
 });

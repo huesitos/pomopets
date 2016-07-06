@@ -22,6 +22,7 @@
         "src/ui/pet/PetAnimator.js",
         "src/ui/pomodoro/PomodoroScene.js",
         "src/ui/pomodoro/PomodoroUILayer.js",
+        "src/engine/pomodoro/PomodoroEvents.js",
         "src/engine/pomodoro/PomodoroManager.js",
         "src/Resource.js"
     ]

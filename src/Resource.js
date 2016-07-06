@@ -13,6 +13,7 @@ var fonts = {
 var fontsSettings = {
     mainTextColor : new cc.Color(0, 0, 0),
     timeLabelSize : 240,
+    normalLabelSize : 100,
     currencyLabelSize : 75
 };
 for (var i in fonts) {
@@ -48,6 +49,8 @@ var pomodoroLayerRes = {
     minus : folder + "minus.png",
     plus : folder + "plus.png",
     start : folder + "start.png",
+    stop : folder + "start.png",
+    back : folder + "start.png",
     blackBar : folder + "black-bar.png"
 };
 for (var i in pomodoroLayerRes) {
@@ -69,3 +72,30 @@ for (var i in uiLayerRes) {
     g_resources.push(uiLayerRes[i]);
 }
 
+// Motivational phrases
+var messages = [
+    "Keep going",
+    "You can do it!",
+    "Don't stop now!",
+    "Don't look at me!",
+    "If you feel like stopping, continue.",
+    "If it's not now, when?",
+    "Getting there!"
+];
+
+var getRandomMessage = function () {
+    var random = Math.floor(Math.random() * messages.length);
+    
+    return messages[random];
+}
+
+var failureMessages = [
+    "Too bad!",
+    "Better luck next time!"
+];
+
+var getRandomFailureMessage = function () {
+    var random = Math.floor(Math.random() * failureMessages.length);
+    
+    return failureMessages[random];
+}

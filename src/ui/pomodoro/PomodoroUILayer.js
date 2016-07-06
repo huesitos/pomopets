@@ -7,8 +7,6 @@ var PomodoroUILayer = cc.Layer.extend({
         // ask the window size
         var size = cc.winSize;
         
-        this.pomodoroManager = pomodoroManager;
-        
         /////////////////////////////
         // 2. add buttons
         
@@ -36,7 +34,7 @@ var PomodoroUILayer = cc.Layer.extend({
         );
         this.addChild(this.less, 0);
         
-        // start time button
+        // start pomodoro button
         this.start = makeButton(
             pomodoroLayerRes.start, 
             cc.p(
@@ -48,7 +46,33 @@ var PomodoroUILayer = cc.Layer.extend({
         );
         this.addChild(this.start, 0);
         
-        // start time button
+        // stop pomodoro button
+        this.stop = makeButton(
+            pomodoroLayerRes.stop, 
+            cc.p(
+                size.width - 621,
+                size.height - 1900
+            ),
+            this.stopBtnTouch,
+            this
+        );
+        this.stop.setVisible(false);
+        this.addChild(this.stop, 0);
+        
+        // back button
+        this.back = makeButton(
+            pomodoroLayerRes.back, 
+            cc.p(
+                size.width - 621,
+                size.height - 1670
+            ),
+            this.backBtnTouch,
+            this
+        );
+        this.back.setVisible(false);
+        this.addChild(this.back, 0);
+        
+        // categories change button
         this.categories = makeButton(
             pomodoroLayerRes.categories, 
             cc.p(
@@ -72,12 +96,35 @@ var PomodoroUILayer = cc.Layer.extend({
             x: size.width - 621,
             y: size.height - 1670,
             color: fontsSettings.mainTextColor
-        })
+        });
         this.addChild(this.timeLabel, 0);
+        
+        /////////////////////////////
+        // 4. message label
+        
+        this.messageLabel = new cc.LabelTTF(
+            getRandomMessage(),
+            getFontName(fonts.mainTextFont),
+            fontsSettings.normalLabelSize
+        );
+        this.messageLabel.attr({
+            x: size.width - 621,
+            y: size.height - 450,
+            color: fontsSettings.mainTextColor,
+            visible: false
+        });
+        this.messageLabel.setDimensions(
+            new cc.size(800, 200)
+        );
+        this.messageLabel.setHorizontalAlignment(
+            cc.TEXT_ALIGNMENT_CENTER
+        );
+        this.addChild(this.messageLabel, 0);
         
         return true;
     },
     moreTimeBtnTouch: function (sender, type) {
+        // add time to the pomodoro time
         if (type == ccui.Widget.TOUCH_ENDED) {
             pomodoroManager.addPomodoroTime();
             this.updatePomodoroTimeLabel(
@@ -86,6 +133,7 @@ var PomodoroUILayer = cc.Layer.extend({
         }
     },
     lessTimeBtnTouch: function (sender, type) {
+        // subtract time to the pomodoro time
         if (type == ccui.Widget.TOUCH_ENDED) {
             pomodoroManager.subtractPomodoroTime();
             this.updatePomodoroTimeLabel(
@@ -94,26 +142,85 @@ var PomodoroUILayer = cc.Layer.extend({
         }
     },
     startBtnTouch: function (sender, type) {
+        // start the next pomodoro
         if (type == ccui.Widget.TOUCH_ENDED) {
             pomodoroManager.startPomodoro();
+            this.hideButtons();
+            
             this.schedule(this.runPomodoro, 1);
+            this.messageLabel.setString(getRandomMessage());
+            this.messageLabel.setVisible(true);
+            this.schedule(this.updateMessage, 30);
+        }
+    },
+    stopBtnTouch: function (sender, type) {
+        // start the next pomodoro
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            this.unschedule(this.runPomodoro);
+            this.unschedule(this.updateMessage);
+            this.messageLabel.setString(getRandomFailureMessage());
+            
+            this.timeLabel.setVisible(false);
+            this.stop.setVisible(false);
+            this.back.setVisible(true);
+        }
+    },
+    backBtnTouch: function (sender, type) {
+        // start the next pomodoro
+        if (type == ccui.Widget.TOUCH_ENDED) {
+            this.messageLabel.setVisible(false);
+            this.back.setVisible(false);
+            this.timeLabel.setVisible(true);
+            
+            pomodoroManager.stopPomodoro();
+            this.showButtons();
+            
+            this.updatePomodoroTimeLabel(
+                pomodoroManager.getPomodoroTimeString()
+            );
         }
     },
     categoriesBtnTouch: function (sender, type) {
+        // go to the categories screen
         if (type == ccui.Widget.TOUCH_ENDED) {
             cc.log("categories");
         }
     },
     updatePomodoroTimeLabel: function (time) {
+        // update the label to show the remaining time
+        // or the selected pomodoro time
         this.timeLabel.setString(
             time
         );
     },
+    hideButtons: function () {
+        // make buttons disappear when a pomodoro starts
+        this.more.setVisible(false);
+        this.less.setVisible(false);
+        this.start.setVisible(false);
+        this.categories.setVisible(false);
+        
+        this.stop.setVisible(true);
+    },
+    showButtons: function () {
+        // make buttons disappear when a pomodoro starts
+        this.more.setVisible(true);
+        this.less.setVisible(true);
+        this.start.setVisible(true);
+        this.categories.setVisible(true);
+        
+        this.stop.setVisible(false);
+    },
     runPomodoro: function (dt) {
         // do this with events??
         pomodoroManager.pomodoroTick();
+        
         this.updatePomodoroTimeLabel(
             pomodoroManager.getPomodoroRemainingTime()
         );
+    },
+    updateMessage: function (dt) {
+        // pick another random message
+        this.messageLabel.setString(getRandomMessage());
     }
 });

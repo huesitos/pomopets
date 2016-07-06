@@ -101,59 +101,75 @@ var UILayer = cc.Layer.extend({
         //////////////////////////////
         // 3. add money and diamonds labels
         
-        var moneySprite = new cc.Sprite(uiLayerRes.money);
-        moneySprite.attr({
+        this.moneySprite = new cc.Sprite(uiLayerRes.money);
+        this.moneySprite.attr({
             x: 988,
             y: size.height - 75
         });
-        this.addChild(moneySprite);
+        this.addChild(this.moneySprite);
         
-        var moneyLabel = new cc.LabelTTF(
+        this.moneyLabel = new cc.LabelTTF(
             "0000",
             getFontName(fonts.mainTextFont),
             fontsSettings.currencyLabelSize
         );
-        moneyLabel.attr({
+        this.moneyLabel.attr({
             x: 1050,
             y: size.height - 75,
             color: fontsSettings.mainTextColor,
             anchorX: 0,
             anchorY: 0.5
         });
-        this.addChild(moneyLabel);
+        this.addChild(this.moneyLabel);
         
-        var diamondsSprite = new cc.Sprite(uiLayerRes.diamond);
-        diamondsSprite.attr({
+        this.diamondsSprite = new cc.Sprite(uiLayerRes.diamond);
+        this.diamondsSprite.attr({
             x: 988,
             y: size.height - 175
         });
-        this.addChild(diamondsSprite);
+        this.addChild(this.diamondsSprite);
         
-        var diamondsLabel = new cc.LabelTTF(
+        this.diamondsLabel = new cc.LabelTTF(
             "0000",
             getFontName(fonts.mainTextFont),
             fontsSettings.currencyLabelSize
         );
-        diamondsLabel.attr({
+        this.diamondsLabel.attr({
             x: 1050,
             y: size.height - 175,
             color: fontsSettings.mainTextColor,
             anchorX: 0,
             anchorY: 0.5
         });
-        this.addChild(diamondsLabel);
+        this.addChild(this.diamondsLabel);
+        
+        //////////////////////////////
+        // 6. add pomodoro event listener
+        
+        this.lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
+            this.toggleUI.bind(this)
+        );  
+        this.lPomodoroStopped = pomodoroEvents.listenerToPomodoroStopped(
+            this.toggleUI.bind(this)
+        );
+        
+        cc.eventManager.addListener(this.lPomodoroStarted, 1);
+        cc.eventManager.addListener(this.lPomodoroStopped, 1);
         
         return true;
     },
+    toggleBtns: function () {
+        if (this.menuVisible) {
+            uiAnimator.animateBtnsDisappear(this.menuOptions);
+            this.menuVisible = false;
+        } else {
+            uiAnimator.animateBtnsAppear(this.menuOptions);
+            this.menuVisible = true;
+        }
+    },
     toggleMenuBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
-            if (this.menuVisible) {
-                uiAnimator.animateBtnsDisappear(this.menuOptions);
-                this.menuVisible = false;
-            } else {
-                uiAnimator.animateBtnsAppear(this.menuOptions);
-                this.menuVisible = true;
-            }
+            this.toggleBtns();
         }
     },
     userBtnTouch: function (sender, type) {
@@ -179,5 +195,26 @@ var UILayer = cc.Layer.extend({
         if (type == ccui.Widget.TOUCH_ENDED && clickable) {
             cc.log("settings");
         }
+    },
+    toggleUI: function () {
+        // hide menu button
+        var menuVisibility = this.menuBtn.isVisible();
+        this.menuBtn.setVisible(!menuVisibility);
+        
+        // hide money label
+        var moneyVisibility = this.moneyLabel.isVisible();
+        this.moneyLabel.setVisible(!moneyVisibility);
+        this.moneySprite.setVisible(!moneyVisibility);
+        
+        // hide diamonds label
+        var diamondVisibility = this.diamondsLabel.isVisible();
+        this.diamondsLabel.setVisible(!diamondVisibility);
+        this.diamondsSprite.setVisible(!diamondVisibility);
+        
+        this.menuOptions.map(btn => btn.setVisible(false));
+        // hide menu if it is visible
+        if(this.menuVisible)
+            this.toggleBtns();
+        
     }
 });
