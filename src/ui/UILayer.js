@@ -149,12 +149,12 @@ var UILayer = cc.Layer.extend({
         this.lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
             this.toggleUI.bind(this)
         );  
-        this.lPomodoroStopped = pomodoroEvents.listenerToPomodoroStopped(
+        this.lPomodoroStandBy = pomodoroEvents.listenerToPomodoroStandBy(
             this.toggleUI.bind(this)
         );
         
         cc.eventManager.addListener(this.lPomodoroStarted, 1);
-        cc.eventManager.addListener(this.lPomodoroStopped, 1);
+        cc.eventManager.addListener(this.lPomodoroStandBy, 1);
         
         return true;
     },

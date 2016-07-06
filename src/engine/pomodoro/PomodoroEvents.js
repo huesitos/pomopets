@@ -2,6 +2,7 @@ var PomodoroEvents = function () {
     var pomodoroStarted = "pomodoro_started";
     var pomodoroStopped = "pomodoro_stopped";
     var pomodoroFinished = "pomodoro_finished";
+    var pomodoroStandBy = "pomodoro_standby";
     
     var listenerToPomodoroEvent = function (eventName, callback) {
         var listener = cc.EventListener.create({
@@ -25,6 +26,10 @@ var PomodoroEvents = function () {
         return listenerToPomodoroEvent(pomodoroFinished, callback);
     }
     
+    this.listenerToPomodoroStandBy = function (callback) {
+        return listenerToPomodoroEvent(pomodoroStandBy, callback);
+    }
+    
     var dispatchPomodoroEvent = function (eventName, userData) {
         var event = new cc.EventCustom(eventName);
         event.setUserData(userData);
@@ -41,6 +46,10 @@ var PomodoroEvents = function () {
     
     this.dispatchPomodoroFinished = function (userData = null) {
         dispatchPomodoroEvent(pomodoroFinished, userData);
+    }
+    
+    this.dispatchPomodoroStandBy = function (userData = null) {
+        dispatchPomodoroEvent(pomodoroStandBy, userData);
     }
 };
 

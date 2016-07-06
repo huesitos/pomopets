@@ -159,6 +159,7 @@ var PomodoroUILayer = cc.Layer.extend({
             this.unschedule(this.runPomodoro);
             this.unschedule(this.updateMessage);
             this.messageLabel.setString(getRandomFailureMessage());
+            pomodoroManager.stopPomodoro();
             
             this.timeLabel.setVisible(false);
             this.stop.setVisible(false);
@@ -171,8 +172,8 @@ var PomodoroUILayer = cc.Layer.extend({
             this.messageLabel.setVisible(false);
             this.back.setVisible(false);
             this.timeLabel.setVisible(true);
+            pomodoroManager.standByPomodoro();
             
-            pomodoroManager.stopPomodoro();
             this.showButtons();
             
             this.updatePomodoroTimeLabel(

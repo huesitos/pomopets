@@ -75,7 +75,11 @@ var PomodoroManagerSingleton = (function () {
             pomodoroEvents.dispatchPomodoroStopped();
         }
         
-        this.endPomodoro = function () {
+        this.standByPomodoro = function () {
+            pomodoroEvents.dispatchPomodoroStandBy();
+        }
+        
+        this.finishPomodoro = function () {
             // stop the pomodoro when time reaches 0
         }
         
