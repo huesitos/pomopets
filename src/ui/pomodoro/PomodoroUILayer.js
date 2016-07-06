@@ -103,7 +103,7 @@ var PomodoroUILayer = cc.Layer.extend({
         // 4. message label
         
         this.messageLabel = new cc.LabelTTF(
-            getRandomMessage(),
+            "",
             getFontName(fonts.mainTextFont),
             fontsSettings.normalLabelSize
         );
@@ -120,6 +120,15 @@ var PomodoroUILayer = cc.Layer.extend({
             cc.TEXT_ALIGNMENT_CENTER
         );
         this.addChild(this.messageLabel, 0);
+        
+        //////////////////////////////
+        // 5. add pomodoro event listener
+        
+        var lPomodoroFinished = pomodoroEvents.listenerToPomodoroFinished(
+            this.pomodoroFinished.bind(this)
+        );
+        
+        cc.eventManager.addListener(lPomodoroFinished, 1);
         
         return true;
     },
@@ -222,6 +231,9 @@ var PomodoroUILayer = cc.Layer.extend({
     },
     updateMessage: function (dt) {
         // pick another random message
-        this.messageLabel.setString(getRandomMessage());
+        this.messageLabel.setString(getRandomPomodoroMessage());
+    },
+    pomodoroFinished: function (event) {
+        
     }
 });

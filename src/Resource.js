@@ -35,12 +35,20 @@ for (var i in petLayerRes) {
 
 folder = folder + "pet-sprite-sheet/";
 var petAnimationsRes = {
-    pet_standby_plist : folder + "pet-standby.plist",
-    pet_standby_png : folder + "pet-standby.png"
+    pet_standby_plist : folder + "pet-standby1.plist",
+    pet_standby_png : folder + "pet-standby1.png"
 }
 for (var i in petAnimationsRes) {
     g_resources.push(petAnimationsRes[i]);
 }
+
+// List of all the possible choices for animations for each
+// animation type
+var petAnimationChoices = {};
+petAnimationChoices["standby"] = ["pet-standby1"];
+petAnimationChoices["pomodoro"] = [];
+petAnimationChoices["stopped"] = [];
+petAnimationChoices["finished"] = [];
 
 // Path to pomodoro-layer sprites
 folder = "res/sprites/pomodoro-scene/pomodoro-layer/";
@@ -73,7 +81,7 @@ for (var i in uiLayerRes) {
 }
 
 // Motivational phrases
-var messages = [
+var pomodoroMessages = [
     "Keep going",
     "You can do it!",
     "Don't stop now!",
@@ -83,10 +91,10 @@ var messages = [
     "Getting there!"
 ];
 
-var getRandomMessage = function () {
+var getRandomPomodoroMessage = function () {
     var random = Math.floor(Math.random() * messages.length);
     
-    return messages[random];
+    return pomodoroMessages[random];
 }
 
 var failureMessages = [
@@ -99,3 +107,5 @@ var getRandomFailureMessage = function () {
     
     return failureMessages[random];
 }
+
+var successMessage = "Congratulations my friend!";

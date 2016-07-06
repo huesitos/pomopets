@@ -146,15 +146,15 @@ var UILayer = cc.Layer.extend({
         //////////////////////////////
         // 6. add pomodoro event listener
         
-        this.lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
+        var lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
             this.toggleUI.bind(this)
-        );  
-        this.lPomodoroStandBy = pomodoroEvents.listenerToPomodoroStandBy(
+        );
+        var lPomodoroStandBy = pomodoroEvents.listenerToPomodoroStandBy(
             this.toggleUI.bind(this)
         );
         
-        cc.eventManager.addListener(this.lPomodoroStarted, 1);
-        cc.eventManager.addListener(this.lPomodoroStandBy, 1);
+        cc.eventManager.addListener(lPomodoroStarted, 1);
+        cc.eventManager.addListener(lPomodoroStandBy, 1);
         
         return true;
     },
@@ -196,7 +196,7 @@ var UILayer = cc.Layer.extend({
             cc.log("settings");
         }
     },
-    toggleUI: function () {
+    toggleUI: function (event) {
         // hide menu button
         var menuVisibility = this.menuBtn.isVisible();
         this.menuBtn.setVisible(!menuVisibility);

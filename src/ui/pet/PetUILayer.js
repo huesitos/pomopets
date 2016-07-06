@@ -13,7 +13,7 @@ var PetUILayer = cc.Layer.extend({
         //////////////////////////////
         // 2. add pet
         
-        var pet = cc.spriteFrameCache.getSpriteFrame("pet-sprite1.png");
+        var pet = cc.spriteFrameCache.getSpriteFrame("pet-standby11.png");
         this.petSprite = new cc.Sprite(pet);
         this.petSprite.setPosition(cc.p(621, 1120));
         this.addChild(this.petSprite, 1);
@@ -168,15 +168,23 @@ var PetUILayer = cc.Layer.extend({
         //////////////////////////////
         // 6. add pomodoro event listener
         
-        this.lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
-            this.toggleUI.bind(this)
+        var lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
+            this.pomodoroStarted.bind(this)
         );  
-        this.lPomodoroStandBy = pomodoroEvents.listenerToPomodoroStandBy(
-            this.toggleUI.bind(this)
+        var lPomodoroStandBy = pomodoroEvents.listenerToPomodoroStandBy(
+            this.pomodoroStandBy.bind(this)
+        );
+        var lPomodoroStopped = pomodoroEvents.listenerToPomodoroStopped(
+            this.pomodoroStopped.bind(this)
+        );
+        var lPomodoroSFinished = pomodoroEvents.listenerToPomodoroFinished(
+            this.pomodoroFinished.bind(this)
         );
         
-        cc.eventManager.addListener(this.lPomodoroStarted, 1);
-        cc.eventManager.addListener(this.lPomodoroStandBy, 1);
+        cc.eventManager.addListener(lPomodoroStarted, 1);
+        cc.eventManager.addListener(lPomodoroStandBy, 1);
+        cc.eventManager.addListener(lPomodoroStopped, 1);
+        cc.eventManager.addListener(lPomodoroFinished, 1);
         
         return true;
     },
@@ -212,7 +220,21 @@ var PetUILayer = cc.Layer.extend({
             cc.log("let me sleep!");
         }
     },
-    toggleUI: function () {
-        this.uiEnabled = !this.uiEnabled;
+    pomodoroStarted: function (event) {
+        this.uiEnabled = false;
+        
+        petAnimator.animatePetPomodoro(this.petSprite);
+    },
+    pomodoroStopped: function (event) {        
+        petAnimator.animatePetStopped(this.petSprite);
+    },
+    pomodoroFinished: function (event) {    
+        cc.log("pomodoro success pet ui layer");
+        petAnimator.animatePetFinished(this.petSprite);
+    },
+    pomodoroStandBy: function (event) {
+        this.uiEnabled = true;
+        
+        petAnimator.animatePetStandBy(this.petSprite);
     }
 });

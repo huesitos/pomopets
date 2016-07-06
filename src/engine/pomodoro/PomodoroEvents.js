@@ -4,7 +4,7 @@ var PomodoroEvents = function () {
     var pomodoroFinished = "pomodoro_finished";
     var pomodoroStandBy = "pomodoro_standby";
     
-    var listenerToPomodoroEvent = function (eventName, callback) {
+    function listenerToPomodoroEvent(eventName, callback) {
         var listener = cc.EventListener.create({
             event: cc.EventListener.CUSTOM,
             eventName: eventName,

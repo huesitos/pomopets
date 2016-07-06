@@ -76,11 +76,13 @@ var PomodoroManagerSingleton = (function () {
         }
         
         this.standByPomodoro = function () {
+            // notify transition to pomodoro standby
             pomodoroEvents.dispatchPomodoroStandBy();
         }
         
         this.finishPomodoro = function () {
-            // stop the pomodoro when time reaches 0
+            // calculates the reward and dispatches the event
+            
         }
         
         this.pomodoroTick = function () {
@@ -94,8 +96,8 @@ var PomodoroManagerSingleton = (function () {
             }
             
             if(remainingMins === 0) {
-                // launch event pomodoro ended
-                pomodoroRunning = false;
+                // finish the pomodoro
+                this.finishPomodoro();
             }
         }
         
