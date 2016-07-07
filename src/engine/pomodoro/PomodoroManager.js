@@ -2,7 +2,7 @@ var PomodoroManagerSingleton = (function () {
     var instance;
     
     function PomodoroManager() {
-        var MIN_POMODORO_TIME = 5;
+        var MIN_POMODORO_TIME = 1;
         var MAX_POMODORO_TIME = 60;
         
         var pomodoroRunning = false;
@@ -15,9 +15,10 @@ var PomodoroManagerSingleton = (function () {
             var time = cc.sys.localStorage.getItem(
                 JSON.stringify("pomodoroTime")
             );
-            pomodoroTime = JSON.parse(time);
             
-            if (!pomodoroTime)
+            if(time)
+                pomodoroTime = JSON.parse(time);
+            else
                 pomodoroTime = 25;
         }
         

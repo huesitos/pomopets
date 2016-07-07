@@ -6,20 +6,25 @@ var InventorySingleton = (function () {
             diamonds = 0;
         
         function loadInventory() {
+            // load money with previous value or 0
             var m = cc.sys.localStorage.getItem(
                 JSON.stringify("money")
             );
-            money = JSON.parse(m);
             
+            if(m)
+                money = JSON.parse(m);
+            else
+                money = 0;
+            
+            // load diamonds with previous value or 0
             var d = cc.sys.localStorage.getItem(
                 JSON.stringify("diamonds")
             );
-            diamonds = JSON.parse(d);
             
-            if (!diamonds)
+            if(d)
+                diamonds = JSON.parse(d);
+            else
                 diamonds = 0;
-            if (!money)
-                money = 0;
         }
         
         loadInventory();
