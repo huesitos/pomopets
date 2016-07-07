@@ -171,6 +171,15 @@ var UILayer = cc.Layer.extend({
             this.toggleBtns();
         }
     },
+    toggleBtns: function () {
+        if(this.menuVisible) {
+          this.menuVisible = false;
+          uiAnimator.animateBtnsDisappear(this.menuOptions);
+        } else {
+          this.menuVisible = true;
+          uiAnimator.animateBtnsAppear(this.menuOptions);
+        }
+    },
     userBtnTouch: function (sender, type) {
         var clickable = sender.getUserData().clickable;
         if (type == ccui.Widget.TOUCH_ENDED && clickable) {
@@ -195,40 +204,53 @@ var UILayer = cc.Layer.extend({
             cc.log("settings");
         }
     },
-    pomodoroStarted: function (event) {
-        this.menuBtn.setVisible(false);
-        this.menuOptions.map(btn => btn.setVisible(false));
-        
-        this.moneyLabel.setVisible(false);
-        this.moneySprite.setVisible(false);
-        this.diamondsLabel.setVisible(false);
-        this.diamondsSprite.setVisible(false);
-        
-        // hide menu if it is visible
-        if(this.menuVisible) {
-            this.menuVisible = false;
-            uiAnimator.animateBtnsDisappear();
-        }
-    },
-    pomodoroStopped: function (event) {
+    showCurrency: function () {
         this.moneyLabel.setVisible(true);
         this.moneySprite.setVisible(true);
         this.diamondsLabel.setVisible(true);
         this.diamondsSprite.setVisible(true);
+    },
+    hideCurrency: function () {
+        this.moneyLabel.setVisible(false);
+        this.moneySprite.setVisible(false);
+        this.diamondsLabel.setVisible(false);
+        this.diamondsSprite.setVisible(false);
+    },
+    updateMoneyLabel: function (money) {
+        this.moneyLabel.setString(
+            inventory.getMoney().toString()
+        );
+    },
+    updateDiamondsLabel: function (diamonds) {
+        this.diamondsLabel.setString(
+            inventory.getDiamonds().toString()
+        );
+    },
+    pomodoroStarted: function (event) {
+        this.menuBtn.setVisible(false);
+        this.menuOptions.map(btn => btn.setVisible(false));
+        
+        this.hideCurrency();
+        
+        // hide menu if it is visible
+        if(this.menuVisible) {
+            this.menuVisible = false;
+            uiAnimator.animateBtnsDisappear(this.menuOptions);
+        }
+    },
+    pomodoroStopped: function (event) {
+        this.showCurrency();
     },
     pomodoroFinished: function (event) {
         // update the currency and money labels
         var reward = event.getUserData();
         
-        this.moneyLabel.setVisible(true);
-        this.moneySprite.setVisible(true);
-        this.diamondsLabel.setVisible(true);
-        this.diamondsSprite.setVisible(true);
-        this.moneyLabel.setString(inventory.getMoney().toString());
-        this.diamondsLabel.setString(inventory.getDiamonds().toString());
+        this.showCurrency();
+        
+        this.updateMoneyLabel();
+        this.updateDiamondsLabel();
     },
     pomodoroStandBy: function (event) {
-        this.menuBtn.setVisible(false);
-        this.menuOptions.map(btn => btn.setVisible(false));
+        this.menuBtn.setVisible(true);
     }
 });
