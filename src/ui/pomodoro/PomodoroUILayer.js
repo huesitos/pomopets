@@ -157,7 +157,7 @@ var PomodoroUILayer = cc.Layer.extend({
             this.hideButtons();
             
             this.schedule(this.runPomodoro, 1);
-            this.messageLabel.setString(getRandomMessage());
+            this.messageLabel.setString(getRandomPomodoroMessage());
             this.messageLabel.setVisible(true);
             this.schedule(this.updateMessage, 30);
         }
@@ -234,6 +234,14 @@ var PomodoroUILayer = cc.Layer.extend({
         this.messageLabel.setString(getRandomPomodoroMessage());
     },
     pomodoroFinished: function (event) {
+        this.unschedule(this.runPomodoro);
+        this.unschedule(this.updateMessage);
         
+        this.messageLabel.setString(successMessage);
+        pomodoroManager.stopPomodoro();
+
+        this.timeLabel.setVisible(false);
+        this.stop.setVisible(false);
+        this.back.setVisible(true);
     }
 });

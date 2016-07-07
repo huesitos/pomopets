@@ -24,6 +24,7 @@
         "src/ui/pomodoro/PomodoroUILayer.js",
         "src/engine/pomodoro/PomodoroEvents.js",
         "src/engine/pomodoro/PomodoroManager.js",
+        "src/engine/inventory/Inventory.js",
         "src/Resource.js"
     ]
 }

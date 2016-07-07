@@ -82,22 +82,25 @@ var PomodoroManagerSingleton = (function () {
         
         this.finishPomodoro = function () {
             // calculates the reward and dispatches the event
+            var reward = inventory.calculateReward(pomodoroTime);
+            inventory.acceptReward(reward);
             
+            pomodoroEvents.dispatchPomodoroFinished(reward);
         }
         
         this.pomodoroTick = function () {
             // if a minute is over, then start counting again from 59
             // if it isn't, then subtract one second
+            if(remainingMins === 0 && remainingSecs === 0) {
+                // finish the pomodoro
+                this.finishPomodoro();
+            }
+            
             if (remainingSecs === 0) {
                 remainingMins -= 1;
                 remainingSecs = 59;
             } else {
                 remainingSecs -= 1;
-            }
-            
-            if(remainingMins === 0) {
-                // finish the pomodoro
-                this.finishPomodoro();
             }
         }
         

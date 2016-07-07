@@ -177,7 +177,7 @@ var PetUILayer = cc.Layer.extend({
         var lPomodoroStopped = pomodoroEvents.listenerToPomodoroStopped(
             this.pomodoroStopped.bind(this)
         );
-        var lPomodoroSFinished = pomodoroEvents.listenerToPomodoroFinished(
+        var lPomodoroFinished = pomodoroEvents.listenerToPomodoroFinished(
             this.pomodoroFinished.bind(this)
         );
         
@@ -229,7 +229,6 @@ var PetUILayer = cc.Layer.extend({
         petAnimator.animatePetStopped(this.petSprite);
     },
     pomodoroFinished: function (event) {    
-        cc.log("pomodoro success pet ui layer");
         petAnimator.animatePetFinished(this.petSprite);
     },
     pomodoroStandBy: function (event) {

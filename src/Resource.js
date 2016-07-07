@@ -92,7 +92,7 @@ var pomodoroMessages = [
 ];
 
 var getRandomPomodoroMessage = function () {
-    var random = Math.floor(Math.random() * messages.length);
+    var random = Math.floor(Math.random() * pomodoroMessages.length);
     
     return pomodoroMessages[random];
 }

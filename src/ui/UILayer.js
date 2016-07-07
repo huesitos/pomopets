@@ -109,7 +109,7 @@ var UILayer = cc.Layer.extend({
         this.addChild(this.moneySprite);
         
         this.moneyLabel = new cc.LabelTTF(
-            "0000",
+            inventory.getMoney().toString(),
             getFontName(fonts.mainTextFont),
             fontsSettings.currencyLabelSize
         );
@@ -130,7 +130,7 @@ var UILayer = cc.Layer.extend({
         this.addChild(this.diamondsSprite);
         
         this.diamondsLabel = new cc.LabelTTF(
-            "0000",
+            inventory.getDiamonds().toString(),
             getFontName(fonts.mainTextFont),
             fontsSettings.currencyLabelSize
         );
@@ -147,25 +147,24 @@ var UILayer = cc.Layer.extend({
         // 6. add pomodoro event listener
         
         var lPomodoroStarted = pomodoroEvents.listenerToPomodoroStarted(
-            this.toggleUI.bind(this)
+            this.pomodoroStarted.bind(this)
+        );
+        var lPomodoroStopped = pomodoroEvents.listenerToPomodoroStopped(
+            this.pomodoroStopped.bind(this)
+        );
+        var lPomodoroFinished = pomodoroEvents.listenerToPomodoroFinished(
+            this.pomodoroFinished.bind(this)
         );
         var lPomodoroStandBy = pomodoroEvents.listenerToPomodoroStandBy(
-            this.toggleUI.bind(this)
+            this.pomodoroStandBy.bind(this)
         );
         
         cc.eventManager.addListener(lPomodoroStarted, 1);
+        cc.eventManager.addListener(lPomodoroStopped, 1);
+        cc.eventManager.addListener(lPomodoroFinished, 1);
         cc.eventManager.addListener(lPomodoroStandBy, 1);
         
         return true;
-    },
-    toggleBtns: function () {
-        if (this.menuVisible) {
-            uiAnimator.animateBtnsDisappear(this.menuOptions);
-            this.menuVisible = false;
-        } else {
-            uiAnimator.animateBtnsAppear(this.menuOptions);
-            this.menuVisible = true;
-        }
     },
     toggleMenuBtnTouch: function (sender, type) {
         if (type == ccui.Widget.TOUCH_ENDED) {
@@ -196,25 +195,40 @@ var UILayer = cc.Layer.extend({
             cc.log("settings");
         }
     },
-    toggleUI: function (event) {
-        // hide menu button
-        var menuVisibility = this.menuBtn.isVisible();
-        this.menuBtn.setVisible(!menuVisibility);
-        
-        // hide money label
-        var moneyVisibility = this.moneyLabel.isVisible();
-        this.moneyLabel.setVisible(!moneyVisibility);
-        this.moneySprite.setVisible(!moneyVisibility);
-        
-        // hide diamonds label
-        var diamondVisibility = this.diamondsLabel.isVisible();
-        this.diamondsLabel.setVisible(!diamondVisibility);
-        this.diamondsSprite.setVisible(!diamondVisibility);
-        
+    pomodoroStarted: function (event) {
+        this.menuBtn.setVisible(false);
         this.menuOptions.map(btn => btn.setVisible(false));
-        // hide menu if it is visible
-        if(this.menuVisible)
-            this.toggleBtns();
         
+        this.moneyLabel.setVisible(false);
+        this.moneySprite.setVisible(false);
+        this.diamondsLabel.setVisible(false);
+        this.diamondsSprite.setVisible(false);
+        
+        // hide menu if it is visible
+        if(this.menuVisible) {
+            this.menuVisible = false;
+            uiAnimator.animateBtnsDisappear();
+        }
+    },
+    pomodoroStopped: function (event) {
+        this.moneyLabel.setVisible(true);
+        this.moneySprite.setVisible(true);
+        this.diamondsLabel.setVisible(true);
+        this.diamondsSprite.setVisible(true);
+    },
+    pomodoroFinished: function (event) {
+        // update the currency and money labels
+        var reward = event.getUserData();
+        
+        this.moneyLabel.setVisible(true);
+        this.moneySprite.setVisible(true);
+        this.diamondsLabel.setVisible(true);
+        this.diamondsSprite.setVisible(true);
+        this.moneyLabel.setString(inventory.getMoney().toString());
+        this.diamondsLabel.setString(inventory.getDiamonds().toString());
+    },
+    pomodoroStandBy: function (event) {
+        this.menuBtn.setVisible(false);
+        this.menuOptions.map(btn => btn.setVisible(false));
     }
 });
