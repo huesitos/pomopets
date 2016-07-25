@@ -44,7 +44,6 @@ var InventorySingleton = (function () {
             // calculates the reward based on the pomodoro time
 
             // TODO: function to calculate reward
-
             var reward = new Reward(10, 1);
 
             return reward;
@@ -75,10 +74,12 @@ var InventorySingleton = (function () {
 
         this.spendMoney = function (money) {
             money -= money;
+//            cc.eventManager.dispatchMoneyChanged();
         }
 
         this.spendDiamonds = function (diamonds) {
             diamonds -= diamonds;
+//            cc.eventManager.dispatchDiamondsChanged();
         }
 
         this.addOutfit = function (outfit) {
