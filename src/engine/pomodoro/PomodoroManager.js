@@ -8,8 +8,10 @@ var PomodoroManagerSingleton = (function () {
         var pomodoroRunning = false;
         var pomodoroTime;
         
-        var remainingMins,
-            remainingSecs;
+        var remainingMins = 0,
+            remainingSecs = 0;
+        
+        var lastPomodoro = null;
         
         function loadPomodoroTime() {
             var time = cc.sys.localStorage.getItem(
@@ -73,10 +75,16 @@ var PomodoroManagerSingleton = (function () {
             // stop the pomodoro before it finishes
             pomodoroRunning = false;
             
+            // TODO: Get real category
+            var pomodoro = new Pomodoro(pomodoroTime, 0);
+            lastPomodoro = pomodoro;
+            
             pomodoroEvents.dispatchPomodoroStopped();
         }
         
-        this.standByPomodoro = function () {
+        this.standByPomodoro = function (pomodoroDescription = "") {
+            lastPomodoro.setDescription(pomodoroDescription);
+            
             // notify transition to pomodoro standby
             pomodoroEvents.dispatchPomodoroStandBy();
         }
@@ -85,6 +93,12 @@ var PomodoroManagerSingleton = (function () {
             // calculates the reward and dispatches the event
             var reward = inventory.calculateReward(pomodoroTime);
             inventory.acceptReward(reward);
+            
+            // TODO: Get real category
+            var pomodoro = new Pomodoro(pomodoroTime, 0);
+            pomodoro.setReward(reward);
+            pomodoro.setCompleted(true);
+            lastPomodoro = pomodoro;
             
             pomodoroEvents.dispatchPomodoroFinished(reward);
         }
