@@ -14,8 +14,10 @@ cc.game.onStart = function(){
     cc.director.setDisplayStats(false);
     // load resources
     cc.LoaderScene.preload(g_resources, function () {
+        petManager.loadPet();
+        
         cc.spriteFrameCache.addSpriteFrames(
-            petAnimationsRes.pet_standby_plist
+            "res/sprites/pets/cat/cat-standby1.plist"
         );
         
         cc.director.runScene(new PomodoroScene());

@@ -18,7 +18,7 @@ var PomodoroManagerSingleton = (function () {
                 JSON.stringify("pomodoroTime")
             );
             
-            if(time)
+            if (time)
                 pomodoroTime = JSON.parse(time);
             else
                 pomodoroTime = 25;
@@ -32,6 +32,7 @@ var PomodoroManagerSingleton = (function () {
                 JSON.stringify(pomodoroTime)
             );
         }
+        
         
         this.getPomodoroTimeString = function () {
             var time = pomodoroTime.toString() + ":00";
@@ -71,13 +72,32 @@ var PomodoroManagerSingleton = (function () {
             pomodoroEvents.dispatchPomodoroStarted();
         }
         
+        function calculateLoyaltyModifier() {
+            // how many minimum - max 0.12
+            // how many quarters of the total time - max 0.04
+            // if the time was also the max
+            var amount_min = (pomodoroTime/MIN_POMODORO_TIME)/100;
+            var amount_quarters = MAX_POMODORO_TIME/4 > 0 ? 
+                (pomodoroTime/(Math.floor(MAX_POMODORO_TIME/4)))/100 + 1
+                 : 1;
+            var amount_max = pomodoroTime == MAX_POMODORO_TIME ? 1.10 : 1;
+            
+            return amount_min * amount_quarters * amount_max;
+        }
+        
         this.stopPomodoro = function () {
             // stop the pomodoro before it finishes
             pomodoroRunning = false;
             
             // TODO: Get real category
+            // TODO: Save pomodoro
             var pomodoro = new Pomodoro(pomodoroTime, 0);
             lastPomodoro = pomodoro;
+            
+            // loyalty penalty
+            petManager.applyLoyaltyPenalty(
+                calculateLoyaltyModifier()
+            );
             
             pomodoroEvents.dispatchPomodoroStopped();
         }
@@ -90,15 +110,23 @@ var PomodoroManagerSingleton = (function () {
         }
         
         this.finishPomodoro = function () {
+            pomodoroRunning = false;
+            
             // calculates the reward and dispatches the event
             var reward = inventory.calculateReward(pomodoroTime);
             inventory.acceptReward(reward);
             
             // TODO: Get real category
+            // TODO: Save pomodoro
             var pomodoro = new Pomodoro(pomodoroTime, 0);
             pomodoro.setReward(reward);
             pomodoro.setCompleted(true);
             lastPomodoro = pomodoro;
+            
+            // loyalty reward
+            petManager.applyLoyaltyReward(
+                calculateLoyaltyModifier()
+            );
             
             pomodoroEvents.dispatchPomodoroFinished(reward);
         }

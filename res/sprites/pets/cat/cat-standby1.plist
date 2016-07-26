@@ -4,7 +4,7 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>pet-standby11.png</key>
+            <key>cat-standby11.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -19,7 +19,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>pet-standby12.png</key>
+            <key>cat-standby12.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -34,7 +34,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>pet-standby13.png</key>
+            <key>cat-standby13.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -59,13 +59,13 @@
             <key>premultiplyAlpha</key>
             <false/>
             <key>realTextureFileName</key>
-            <string>pet-standby1.png</string>
+            <string>cat-standby1.png</string>
             <key>size</key>
             <string>{1192,864}</string>
             <key>smartupdate</key>
             <string>$TexturePacker:SmartUpdate:a18969e6dc970aec8d395469cb1132fa:5c0295285b60321f7709ac018e5645b9:6261e9c10680d907653bd8dfa8c1739d$</string>
             <key>textureFileName</key>
-            <string>pet-standby1.png</string>
+            <string>cat-standby1.png</string>
         </dict>
     </dict>
 </plist>

@@ -33,22 +33,27 @@ for (var i in petLayerRes) {
     g_resources.push(petLayerRes[i]);
 }
 
-folder = folder + "pet-sprite-sheet/";
-var petAnimationsRes = {
-    pet_standby_plist : folder + "pet-standby1.plist",
-    pet_standby_png : folder + "pet-standby1.png"
-}
-for (var i in petAnimationsRes) {
-    g_resources.push(petAnimationsRes[i]);
-}
-
 // List of all the possible choices for animations for each
-// animation type
-var petAnimationChoices = {};
-petAnimationChoices["standby"] = ["pet-standby1"];
-petAnimationChoices["pomodoro"] = [];
-petAnimationChoices["stopped"] = [];
-petAnimationChoices["finished"] = [];
+// animation type by pet
+petsResFolder = "res/sprites/pets/";
+var petsRes = {
+    cat: {
+        standby: ["cat-standby1"],
+        pomodoro: [],
+        stopped: [],
+        finished: [],
+        sleep: []
+    }
+}
+for (var pet in petsRes) {
+    for (var type in petsRes[pet]) {
+        for (var i = 0; i < petsRes[pet][type].length; i++) {
+            var path = petsResFolder + pet + "/";
+            var file = petsRes[pet][type][i] + ".plist";
+            g_resources.push(path + file);
+        }
+    }
+}
 
 // Path to pomodoro-layer sprites
 folder = "res/sprites/pomodoro-scene/pomodoro-layer/";

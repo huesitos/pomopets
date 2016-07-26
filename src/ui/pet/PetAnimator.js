@@ -3,20 +3,26 @@ var PetAnimatorSingleton = (function() {
     
     function PetAnimator() {
         function loadFrames(type) {
-            // some types of animation has multiple choices
-            var options = petAnimationChoices[type].length;
-            var randomChoice = Math.floor(Math.random() * options);
-            var selectedAnim = petAnimationChoices[type][randomChoice];
-            
             // load the frames
             var frames = [];
             
+            var species = petManager.getPetSpecies();
+            var selectedAnim = petManager.getAnimation(type);
+            var path = petsResFolder + species + "/";
+            var file = selectedAnim + ".plist";
+            
+            cc.spriteFrameCache.addSpriteFrames(
+                path + file,
+                path + selectedAnim + ".png"
+            );
+
             for (var i = 1; i <= 3; i++) {
                 var name = selectedAnim + i + ".png";
                 var frame = cc.spriteFrameCache.getSpriteFrame(name);
 
                 frames.push(frame);
             }
+            
             // reset animation going back to the first frame
             frames.push(cc.spriteFrameCache.getSpriteFrame(
                 selectedAnim + "1.png"

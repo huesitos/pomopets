@@ -13,7 +13,7 @@ var PetUILayer = cc.Layer.extend({
         //////////////////////////////
         // 2. add pet
         
-        var pet = cc.spriteFrameCache.getSpriteFrame("pet-standby11.png");
+        var pet = cc.spriteFrameCache.getSpriteFrame("cat-standby11.png");
         this.petSprite = new cc.Sprite(pet);
         this.petSprite.setPosition(cc.p(621, 1120));
         this.addChild(this.petSprite, 1);
@@ -24,8 +24,9 @@ var PetUILayer = cc.Layer.extend({
         // 3. add pet heart
         
         this.petHeart = new cc.Sprite(petLayerRes.heart);
-        this.petHeart.setPosition(cc.p(621, size.height - 150));
+        this.petHeart.setPosition(cc.p(621, size.height - 160));
         this.addChild(this.petHeart);
+        this.updatePetHeart();
         
         petUIAnimator.animateHeartBeat(this.petHeart);
         
@@ -225,15 +226,23 @@ var PetUILayer = cc.Layer.extend({
         
         petAnimator.animatePetPomodoro(this.petSprite);
     },
-    pomodoroStopped: function (event) {        
+    pomodoroStopped: function (event) {
+        this.updatePetHeart();
+        
         petAnimator.animatePetStopped(this.petSprite);
     },
-    pomodoroFinished: function (event) {    
+    pomodoroFinished: function (event) {
+        this.updatePetHeart();
+        
         petAnimator.animatePetFinished(this.petSprite);
     },
     pomodoroStandBy: function (event) {
         this.uiEnabled = true;
         
         petAnimator.animatePetStandBy(this.petSprite);
+    },
+    updatePetHeart: function () {
+        this.petHeart.setColor(petManager.getPetLoyaltyColor());
+        this.petHeart.setScale(petManager.getPetHeartSize());
     }
 });

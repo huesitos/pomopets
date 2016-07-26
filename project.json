@@ -26,6 +26,8 @@
         "src/engine/pomodoro/PomodoroManager.js",
         "src/engine/pomodoro/Pomodoro.js",
         "src/engine/inventory/Inventory.js",
+        "src/engine/pet/Pet.js",
+        "src/engine/pet/PetManager.js",
         "src/Resource.js"
     ]
 }
