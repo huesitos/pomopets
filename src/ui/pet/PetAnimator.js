@@ -44,8 +44,8 @@ var PetAnimatorSingleton = (function() {
             var petAnimation = new cc.Animate(animation);
             var delay = new cc.DelayTime(5);
             var sequence = new cc.Sequence(
-                delay, 
-                petAnimation
+                petAnimation,
+                delay
             );
 
             pet.runAction(new cc.RepeatForever(sequence));
