@@ -39,15 +39,6 @@ var InventorySingleton = (function () {
                 JSON.stringify(diamonds)
             );
         }
-        
-        this.calculateReward = function (time) {
-            // calculates the reward based on the pomodoro time
-
-            // TODO: function to calculate reward
-            var reward = new Reward(10, 1);
-
-            return reward;
-        }
 
         this.acceptReward = function (reward) {
             money += reward.money;

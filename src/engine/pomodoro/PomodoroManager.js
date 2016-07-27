@@ -1,3 +1,6 @@
+var POMODORO_BASE_MONEY_REWARD = 10;
+var POMODORO_BASE_DIAMONDS_REWARD = 1;
+
 var PomodoroManagerSingleton = (function () {
     var instance;
     
@@ -33,6 +36,38 @@ var PomodoroManagerSingleton = (function () {
             );
         }
         
+        function calculateRewardModifier() {
+            // how many minimum - max 0.12
+            // how many quarters of the total time - max 0.04
+            // if the time was also the max
+            var amount_min = (pomodoroTime/MIN_POMODORO_TIME)/100;
+            var amount_quarters = MAX_POMODORO_TIME/4 > 0 ? 
+                (pomodoroTime/(Math.floor(MAX_POMODORO_TIME/4)))/100 + 1
+                 : 1;
+            var amount_max = pomodoroTime == MAX_POMODORO_TIME ? 1.10 : 1;
+            
+            return amount_min * amount_quarters * amount_max;
+        }
+        
+        function calculatePomodoroReward(time, loyalty) {
+            // calculates the reward based on the pomodoro time
+
+            var money = Math.floor(
+                POMODORO_BASE_MONEY_REWARD * 
+                (1 + calculateRewardModifier()) *
+                (1 + .25*petManager.getPetLoyalty())
+            );
+            
+            var diamonds = Math.floor(
+                POMODORO_BASE_DIAMONDS_REWARD * 
+                (1 + calculateRewardModifier()) *
+                (1 + .10*petManager.getPetLoyalty())
+            );
+            
+            var reward = new Reward(money, diamonds);
+
+            return reward;
+        }
         
         this.getPomodoroTimeString = function () {
             var time = pomodoroTime.toString() + ":00";
@@ -72,19 +107,6 @@ var PomodoroManagerSingleton = (function () {
             pomodoroEvents.dispatchPomodoroStarted();
         }
         
-        function calculateLoyaltyModifier() {
-            // how many minimum - max 0.12
-            // how many quarters of the total time - max 0.04
-            // if the time was also the max
-            var amount_min = (pomodoroTime/MIN_POMODORO_TIME)/100;
-            var amount_quarters = MAX_POMODORO_TIME/4 > 0 ? 
-                (pomodoroTime/(Math.floor(MAX_POMODORO_TIME/4)))/100 + 1
-                 : 1;
-            var amount_max = pomodoroTime == MAX_POMODORO_TIME ? 1.10 : 1;
-            
-            return amount_min * amount_quarters * amount_max;
-        }
-        
         this.stopPomodoro = function () {
             // stop the pomodoro before it finishes
             pomodoroRunning = false;
@@ -96,7 +118,7 @@ var PomodoroManagerSingleton = (function () {
             
             // loyalty penalty
             petManager.applyLoyaltyPenalty(
-                calculateLoyaltyModifier()
+                calculateRewardModifier()
             );
             
             pomodoroEvents.dispatchPomodoroStopped();
@@ -113,7 +135,10 @@ var PomodoroManagerSingleton = (function () {
             pomodoroRunning = false;
             
             // calculates the reward and dispatches the event
-            var reward = inventory.calculateReward(pomodoroTime);
+            var reward = calculatePomodoroReward(
+                pomodoroTime, 
+                petManager.getPetLoyalty()
+            );
             inventory.acceptReward(reward);
             
             // TODO: Get real category
@@ -125,7 +150,7 @@ var PomodoroManagerSingleton = (function () {
             
             // loyalty reward
             petManager.applyLoyaltyReward(
-                calculateLoyaltyModifier()
+                calculateRewardModifier()
             );
             
             pomodoroEvents.dispatchPomodoroFinished(reward);
