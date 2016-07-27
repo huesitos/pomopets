@@ -39,10 +39,10 @@ petsResFolder = "res/sprites/pets/";
 var petsRes = {
     cat: {
         standby: ["cat-standby1"],
-        pomodoro: [],
-        stopped: [],
-        finished: [],
-        sleep: []
+        pomodoro: ["cat-pomodoro1"],
+        stopped: ["cat-stopped1"],
+        finished: ["cat-finished1"],
+        sleep: ["cat-sleep1"]
     }
 }
 for (var pet in petsRes) {

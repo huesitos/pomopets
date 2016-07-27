@@ -56,15 +56,19 @@ var PetAnimatorSingleton = (function() {
         }
         
         this.animatePetPomodoro = function (pet) {
-            animatePet("standby", pet);
+            animatePet("pomodoro", pet);
         }
         
         this.animatePetStopped = function (pet) {
-            animatePet("standby", pet);
+            animatePet("stopped", pet);
         }
         
         this.animatePetFinished = function (pet) {
-            animatePet("standby", pet);
+            animatePet("finshed", pet);
+        }
+        
+        this.animatePetFinished = function (pet) {
+            animatePet("sleep", pet);
         }
     }
     
