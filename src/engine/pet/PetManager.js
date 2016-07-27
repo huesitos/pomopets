@@ -50,7 +50,6 @@ var PetManagerSingleton = (function () {
             var reward = PET_LOYALTY_REWARD + bonus;
             
             currentPet.increaseLoyalty(reward);
-            cc.log(currentPet.loyalty);
             savePet();
         }
         
@@ -58,7 +57,6 @@ var PetManagerSingleton = (function () {
             var penalty = PET_LOYALTY_PENALTY + bonus;
             
             currentPet.decreaseLoyalty(bonus);
-            cc.log(currentPet.loyalty);
             savePet();
         }
         

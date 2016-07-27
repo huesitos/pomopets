@@ -14,27 +14,29 @@ var PetUILayer = cc.Layer.extend({
         // 2. add pet
         
         var pet = cc.spriteFrameCache.getSpriteFrame("cat-standby11.png");
-        this.petSprite = new cc.Sprite(pet);
-        this.petSprite.setPosition(cc.p(621, 1120));
-        this.addChild(this.petSprite, 1);
+        var petSprite = new cc.Sprite(pet);
+        petSprite.setPosition(cc.p(621, 1120));
+        petSprite.setName("petSprite");
+        this.addChild(petSprite, 1);
         
-        petAnimator.animatePetStandBy(this.petSprite);
+        petAnimator.animatePetStandBy(petSprite);
         
         //////////////////////////////
         // 3. add pet heart
         
-        this.petHeart = new cc.Sprite(petLayerRes.heart);
-        this.petHeart.setPosition(cc.p(621, size.height - 160));
-        this.addChild(this.petHeart);
+        var petHeart = new cc.Sprite(petLayerRes.heart);
+        petHeart.setPosition(cc.p(621, size.height - 160));
+        petHeart.setName("petHeart");
+        this.addChild(petHeart);
         this.updatePetHeart();
         
-        petUIAnimator.animateHeartBeat(this.petHeart);
+        petUIAnimator.animateHeartBeat(petHeart);
         
         //////////////////////////////
         // 4. add pet buttons
         
         // all buttons start behind the pet and in the center
-        var initialX = this.petSprite.getPositionX();
+        var initialX = petSprite.getPositionX();
         var initialY = size.height / 2;
         var initialPos = cc.p(initialX, initialY);
         
@@ -106,13 +108,12 @@ var PetUILayer = cc.Layer.extend({
         sleepBtn.setVisible(false);
         this.addChild(sleepBtn, 0);
         
-        var petOptionsBtns = [
+        this.petOptionsBtns = [
             outfitBtn, 
             foodBtn, 
             petsBtn, 
             sleepBtn
         ];
-        this.petOptionsBtns = petOptionsBtns;
         this.petMenuShowing = false;
         
         //////////////////////////////
@@ -129,7 +130,8 @@ var PetUILayer = cc.Layer.extend({
                 // show pet menu if the user clicks pet
                 // hide pet menu if the user clicks anywhere else
                 onTouchEnded: (touch, event) => {
-                    var petRect = this.petSprite.getBoundingBox();
+                    var petSprite = this.getChildByName("petSprite");
+                    var petRect = petSprite.getBoundingBox();
                     var point = touch.getLocation();
                     
                     if (cc.rectContainsPoint(petRect, point) && this.uiEnabled) {
@@ -150,7 +152,8 @@ var PetUILayer = cc.Layer.extend({
                 // show pet menu if the user clicks pet
                 // hide pet menu if the user clicks anywhere else
                 onMouseDown: (touch, event) => {
-                    var petRect = this.petSprite.getBoundingBox();
+                    var petSprite = this.getChildByName("petSprite");
+                    var petRect = petSprite.getBoundingBox();
                     var point = touch.getLocation();
                     
                     if (cc.rectContainsPoint(petRect, point) && this.uiEnabled) {
@@ -224,25 +227,27 @@ var PetUILayer = cc.Layer.extend({
     pomodoroStarted: function (event) {
         this.uiEnabled = false;
         
-        petAnimator.animatePetPomodoro(this.petSprite);
+        petAnimator.animatePetPomodoro(this.getChildByName("petSprite"));
     },
     pomodoroStopped: function (event) {
         this.updatePetHeart();
         
-        petAnimator.animatePetStopped(this.petSprite);
+        petAnimator.animatePetStopped(this.getChildByName("petSprite"));
     },
     pomodoroFinished: function (event) {
         this.updatePetHeart();
         
-        petAnimator.animatePetFinished(this.petSprite);
+        petAnimator.animatePetFinished(this.getChildByName("petSprite"));
     },
     pomodoroStandBy: function (event) {
         this.uiEnabled = true;
         
-        petAnimator.animatePetStandBy(this.petSprite);
+        petAnimator.animatePetStandBy(this.getChildByName("petSprite"));
     },
     updatePetHeart: function () {
-        this.petHeart.setColor(petManager.getPetLoyaltyColor());
-        this.petHeart.setScale(petManager.getPetHeartSize());
+        var petHeart = this.getChildByName("petHeart");
+        
+        petHeart.setColor(petManager.getPetLoyaltyColor());
+        petHeart.setScale(petManager.getPetHeartSize());
     }
 });

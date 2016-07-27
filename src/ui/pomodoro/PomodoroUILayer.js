@@ -11,7 +11,7 @@ var PomodoroUILayer = cc.Layer.extend({
         // 2. add buttons
         
         // more time button
-        this.more = makeButton(
+        var more = makeButton(
             pomodoroLayerRes.plus, 
             cc.p(
                 size.width - 939,
@@ -20,10 +20,11 @@ var PomodoroUILayer = cc.Layer.extend({
             this.moreTimeBtnTouch,
             this
         );
-        this.addChild(this.more, 0);
+        more.setName("more");
+        this.addChild(more, 0);
         
         // less time button
-        this.less = makeButton(
+        var less = makeButton(
             pomodoroLayerRes.minus, 
             cc.p(
                 size.width - 302,
@@ -32,10 +33,11 @@ var PomodoroUILayer = cc.Layer.extend({
             this.lessTimeBtnTouch,
             this
         );
-        this.addChild(this.less, 0);
+        less.setName("less");
+        this.addChild(less, 0);
         
         // start pomodoro button
-        this.start = makeButton(
+        var start = makeButton(
             pomodoroLayerRes.start, 
             cc.p(
                 size.width - 621,
@@ -44,10 +46,11 @@ var PomodoroUILayer = cc.Layer.extend({
             this.startBtnTouch,
             this
         );
-        this.addChild(this.start, 0);
+        start.setName("start");
+        this.addChild(start, 0);
         
         // stop pomodoro button
-        this.stop = makeButton(
+        var stop = makeButton(
             pomodoroLayerRes.stop, 
             cc.p(
                 size.width - 621,
@@ -56,24 +59,26 @@ var PomodoroUILayer = cc.Layer.extend({
             this.stopBtnTouch,
             this
         );
-        this.stop.setVisible(false);
-        this.addChild(this.stop, 0);
+        stop.setName("stop");
+        stop.setVisible(false);
+        this.addChild(stop, 0);
         
         // back button
-        this.back = makeButton(
+        var back = makeButton(
             pomodoroLayerRes.back, 
             cc.p(
                 size.width - 621,
-                size.height - 1670
+                size.height - 1900
             ),
             this.backBtnTouch,
             this
         );
-        this.back.setVisible(false);
-        this.addChild(this.back, 0);
+        back.setName("back");
+        back.setVisible(false);
+        this.addChild(back, 0);
         
         // categories change button
-        this.categories = makeButton(
+        var categories = makeButton(
             pomodoroLayerRes.categories, 
             cc.p(
                 350,
@@ -82,47 +87,131 @@ var PomodoroUILayer = cc.Layer.extend({
             this.categoriesBtnTouch,
             this
         );
-        this.addChild(this.categories, 0);
+        categories.setName("categories");
+        this.addChild(categories, 0);
         
         /////////////////////////////
         // 3. time label
         
-        this.timeLabel = new cc.LabelTTF(
+        var timeLabel = new cc.LabelTTF(
             pomodoroManager.getPomodoroTimeString(),
             getFontName(fonts.mainTextFont),
             fontsSettings.timeLabelSize
         );
-        this.timeLabel.attr({
+        timeLabel.attr({
             x: size.width - 621,
             y: size.height - 1670,
             color: fontsSettings.mainTextColor
         });
-        this.addChild(this.timeLabel, 0);
+        timeLabel.setName("timeLabel");
+        this.addChild(timeLabel, 0);
         
         /////////////////////////////
-        // 4. message label
+        // 4. message labels
         
-        this.messageLabel = new cc.LabelTTF(
+        var messageLabel = new cc.LabelTTF(
             "",
             getFontName(fonts.mainTextFont),
             fontsSettings.normalLabelSize
         );
-        this.messageLabel.attr({
+        messageLabel.attr({
             x: size.width - 621,
             y: size.height - 450,
             color: fontsSettings.mainTextColor,
             visible: false
         });
-        this.messageLabel.setDimensions(
+        messageLabel.setDimensions(
             new cc.size(800, 200)
         );
-        this.messageLabel.setHorizontalAlignment(
+        messageLabel.setHorizontalAlignment(
             cc.TEXT_ALIGNMENT_CENTER
         );
-        this.addChild(this.messageLabel, 0);
+        messageLabel.setName("messageLabel");
+        this.addChild(messageLabel, 0);
+        
+        /////////////////////////////
+        // 5. reward labels and icons
+        
+        var rewardLabel = new cc.LabelTTF(
+            "Reward",
+            getFontName(fonts.mainTextFont),
+            fontsSettings.normalLabelSize
+        );
+        rewardLabel.attr({
+            x: size.width - 621,
+            y: size.height - 1590,
+            color: fontsSettings.mainTextColor,
+            visible: false
+        });
+        rewardLabel.setName("rewardLabel");
+        this.addChild(rewardLabel);
+        
+        var labelGap = 20;
+        
+        // money reward label and icon
+        var moneyRewardIcon = new cc.Sprite(uiLayerRes.money);
+        moneyRewardIcon.attr({
+            x: size.width - 771,
+            y: size.height - 1700,
+            visible: false
+        });
+        moneyRewardIcon.setName("moneyRewardIcon");
+        this.addChild(moneyRewardIcon);
+        
+        var moneyLabelX = moneyRewardIcon.getPosition().x +
+            moneyRewardIcon.getContentSize().width + 
+            labelGap;
+        var moneyRewardLabel = new cc.LabelTTF(
+            "",
+            getFontName(fonts.mainTextFont),
+            fontsSettings.currencyLabelSize
+        );
+        moneyRewardLabel.attr({
+            x: moneyLabelX,
+            y: size.height - 1700,
+            color: fontsSettings.mainTextColor,
+            visible: false
+        });
+        moneyRewardLabel.setName("moneyRewardLabel");
+        this.addChild(moneyRewardLabel);
+        
+        // diamond reward label and icon
+        var diamondRewardIcon = new cc.Sprite(uiLayerRes.diamond);
+        diamondRewardIcon.attr({
+            x: size.width - 571,
+            y: size.height - 1700,
+            visible: false
+        });
+        diamondRewardIcon.setName("diamondRewardIcon");
+        this.addChild(diamondRewardIcon);
+        
+        var diamondLabelX = diamondRewardIcon.getPosition().x +
+            diamondRewardIcon.getContentSize().width + 
+            labelGap;
+        var diamondRewardLabel = new cc.LabelTTF(
+            "",
+            getFontName(fonts.mainTextFont),
+            fontsSettings.currencyLabelSize
+        );
+        diamondRewardLabel.attr({
+            x: diamondLabelX,
+            y: size.height - 1700,
+            color: fontsSettings.mainTextColor,
+            visible: false
+        });
+        diamondRewardLabel.setName("diamondRewardLabel");
+        this.addChild(diamondRewardLabel);
+        
+        this.rewardNodes = [
+            rewardLabel,
+            moneyRewardLabel,
+            diamondRewardLabel,
+            moneyRewardIcon,
+            diamondRewardIcon
+        ];
         
         //////////////////////////////
-        // 5. add pomodoro event listener
+        // 6. add pomodoro event listener
         
         var lPomodoroFinished = pomodoroEvents.listenerToPomodoroFinished(
             this.pomodoroFinished.bind(this)
@@ -156,9 +245,11 @@ var PomodoroUILayer = cc.Layer.extend({
             pomodoroManager.startPomodoro();
             this.hideButtons();
             
+            var messageLabel = this.getChildByName("messageLabel");
+            messageLabel.setString(getRandomPomodoroMessage());
+            messageLabel.setVisible(true);
+            
             this.schedule(this.runPomodoro, 1);
-            this.messageLabel.setString(getRandomPomodoroMessage());
-            this.messageLabel.setVisible(true);
             this.schedule(this.updateMessage, 30);
         }
     },
@@ -167,23 +258,26 @@ var PomodoroUILayer = cc.Layer.extend({
         if (type == ccui.Widget.TOUCH_ENDED) {
             this.unschedule(this.runPomodoro);
             this.unschedule(this.updateMessage);
-            this.messageLabel.setString(getRandomFailureMessage());
+            this.getChildByName("messageLabel").setString(
+                getRandomFailureMessage()
+            );
             pomodoroManager.stopPomodoro();
             
-            this.timeLabel.setVisible(false);
-            this.stop.setVisible(false);
-            this.back.setVisible(true);
+            this.getChildByName("timeLabel").setVisible(false);
+            this.getChildByName("stop").setVisible(false);
+            this.getChildByName("back").setVisible(true);
         }
     },
     backBtnTouch: function (sender, type) {
         // start the next pomodoro
         if (type == ccui.Widget.TOUCH_ENDED) {
-            this.messageLabel.setVisible(false);
-            this.back.setVisible(false);
-            this.timeLabel.setVisible(true);
+            this.getChildByName("messageLabel").setVisible(false);
+            this.getChildByName("back").setVisible(false);
+            this.getChildByName("timeLabel").setVisible(true);
             pomodoroManager.standByPomodoro();
             
             this.showButtons();
+            this.hideRewardInformation();
             
             this.updatePomodoroTimeLabel(
                 pomodoroManager.getPomodoroTimeString()
@@ -199,27 +293,27 @@ var PomodoroUILayer = cc.Layer.extend({
     updatePomodoroTimeLabel: function (time) {
         // update the label to show the remaining time
         // or the selected pomodoro time
-        this.timeLabel.setString(
+        this.getChildByName("timeLabel").setString(
             time
         );
     },
     hideButtons: function () {
         // make buttons disappear when a pomodoro starts
-        this.more.setVisible(false);
-        this.less.setVisible(false);
-        this.start.setVisible(false);
-        this.categories.setVisible(false);
+        this.getChildByName("more").setVisible(false);
+        this.getChildByName("less").setVisible(false);
+        this.getChildByName("start").setVisible(false);
+        this.getChildByName("categories").setVisible(false);
         
-        this.stop.setVisible(true);
+        this.getChildByName("stop").setVisible(true);
     },
     showButtons: function () {
-        // make buttons disappear when a pomodoro starts
-        this.more.setVisible(true);
-        this.less.setVisible(true);
-        this.start.setVisible(true);
-        this.categories.setVisible(true);
+        // make buttons appear when in standby
+        this.getChildByName("more").setVisible(true);
+        this.getChildByName("less").setVisible(true);
+        this.getChildByName("start").setVisible(true);
+        this.getChildByName("categories").setVisible(true);
         
-        this.stop.setVisible(false);
+        this.getChildByName("stop").setVisible(false);
     },
     runPomodoro: function (dt) {
         // do this with events??
@@ -231,16 +325,34 @@ var PomodoroUILayer = cc.Layer.extend({
     },
     updateMessage: function (dt) {
         // pick another random message
-        this.messageLabel.setString(getRandomPomodoroMessage());
+        this.getChildByName("messageLabel").setString(
+            getRandomPomodoroMessage()
+        );
+    },
+    showRewardInformation: function () {
+        for (var n in this.rewardNodes) {
+            this.rewardNodes[n].setVisible(true);
+        }
+    },
+    hideRewardInformation: function () {
+        for (var n in this.rewardNodes) {
+            this.rewardNodes[n].setVisible(false);
+        }
+    },
+    updateRewardLabels: function (reward) {
+        this.getChildByName("moneyRewardLabel").setString(reward.money);
+        this.getChildByName("diamondRewardLabel").setString(reward.diamonds);
     },
     pomodoroFinished: function (event) {
         this.unschedule(this.runPomodoro);
         this.unschedule(this.updateMessage);
         
-        this.messageLabel.setString(successMessage);
+        this.getChildByName("messageLabel").setString(successMessage);
+        this.updateRewardLabels(event.getUserData())
+        this.showRewardInformation();
 
-        this.timeLabel.setVisible(false);
-        this.stop.setVisible(false);
-        this.back.setVisible(true);
+        this.getChildByName("timeLabel").setVisible(false);
+        this.getChildByName("stop").setVisible(false);
+        this.getChildByName("back").setVisible(true);
     }
 });

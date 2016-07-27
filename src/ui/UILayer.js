@@ -101,47 +101,51 @@ var UILayer = cc.Layer.extend({
         //////////////////////////////
         // 3. add money and diamonds labels
         
-        this.moneySprite = new cc.Sprite(uiLayerRes.money);
-        this.moneySprite.attr({
+        var moneySprite = new cc.Sprite(uiLayerRes.money);
+        moneySprite.attr({
             x: 988,
             y: size.height - 75
         });
-        this.addChild(this.moneySprite);
+        moneySprite.setName("moneySprite");
+        this.addChild(moneySprite);
         
-        this.moneyLabel = new cc.LabelTTF(
+        var moneyLabel = new cc.LabelTTF(
             inventory.getMoney().toString(),
             getFontName(fonts.mainTextFont),
             fontsSettings.currencyLabelSize
         );
-        this.moneyLabel.attr({
+        moneyLabel.attr({
             x: 1050,
             y: size.height - 75,
             color: fontsSettings.mainTextColor,
             anchorX: 0,
             anchorY: 0.5
         });
-        this.addChild(this.moneyLabel);
+        moneyLabel.setName("moneyLabel");
+        this.addChild(moneyLabel);
         
-        this.diamondsSprite = new cc.Sprite(uiLayerRes.diamond);
-        this.diamondsSprite.attr({
+        var diamondsSprite = new cc.Sprite(uiLayerRes.diamond);
+        diamondsSprite.attr({
             x: 988,
             y: size.height - 175
         });
-        this.addChild(this.diamondsSprite);
+        diamondsSprite.setName("diamondsSprite");
+        this.addChild(diamondsSprite);
         
-        this.diamondsLabel = new cc.LabelTTF(
+        var diamondsLabel = new cc.LabelTTF(
             inventory.getDiamonds().toString(),
             getFontName(fonts.mainTextFont),
             fontsSettings.currencyLabelSize
         );
-        this.diamondsLabel.attr({
+        diamondsLabel.attr({
             x: 1050,
             y: size.height - 175,
             color: fontsSettings.mainTextColor,
             anchorX: 0,
             anchorY: 0.5
         });
-        this.addChild(this.diamondsLabel);
+        diamondsLabel.setName("diamondsLabel");
+        this.addChild(diamondsLabel);
         
         //////////////////////////////
         // 6. add pomodoro event listener
@@ -205,24 +209,24 @@ var UILayer = cc.Layer.extend({
         }
     },
     showCurrency: function () {
-        this.moneyLabel.setVisible(true);
-        this.moneySprite.setVisible(true);
-        this.diamondsLabel.setVisible(true);
-        this.diamondsSprite.setVisible(true);
+        this.getChildByName("moneyLabel").setVisible(true);
+        this.getChildByName("moneySprite").setVisible(true);
+        this.getChildByName("diamondsLabel").setVisible(true);
+        this.getChildByName("diamondsSprite").setVisible(true);
     },
     hideCurrency: function () {
-        this.moneyLabel.setVisible(false);
-        this.moneySprite.setVisible(false);
-        this.diamondsLabel.setVisible(false);
-        this.diamondsSprite.setVisible(false);
+        this.getChildByName("moneyLabel").setVisible(false);
+        this.getChildByName("moneySprite").setVisible(false);
+        this.getChildByName("diamondsLabel").setVisible(false);
+        this.getChildByName("diamondsSprite").setVisible(false);
     },
     updateMoneyLabel: function (money) {
-        this.moneyLabel.setString(
+        this.getChildByName("moneyLabel").setString(
             inventory.getMoney().toString()
         );
     },
     updateDiamondsLabel: function (diamonds) {
-        this.diamondsLabel.setString(
+        this.getChildByName("diamondsLabel").setString(
             inventory.getDiamonds().toString()
         );
     },
