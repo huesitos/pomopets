@@ -6,10 +6,9 @@ var PetManagerSingleton = (function () {
         var that = this;
         
         this.loadPet = function () {
-            var pet = cc.sys.localStorage.getItem(
-                JSON.parse(JSON.stringify("currentPetInfo"))
-            );
-            
+            var pet = JSON.parse(cc.sys.localStorage.getItem(
+                JSON.stringify("currentPetInfo")
+            ));
             // if a pet exists, load the pet
             // if it doesn't, create a new default pet
             if (pet) {
@@ -29,6 +28,7 @@ var PetManagerSingleton = (function () {
                 loyalty: currentPet.loyalty,
                 asleep: currentPet.asleep
             }
+            
             cc.sys.localStorage.setItem(
                 JSON.stringify("currentPetInfo"),
                 JSON.stringify(petInfo)
