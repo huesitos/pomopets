@@ -21,7 +21,6 @@ var PetManagerSingleton = (function () {
             } else {
                 currentPet = new Pet("cat");
             }
-            cc.log(pet);
         }
                 
         var savePet = () => {
@@ -30,7 +29,6 @@ var PetManagerSingleton = (function () {
                 loyalty: currentPet.loyalty,
                 asleep: currentPet.asleep
             }
-            cc.log(petInfo);
             cc.sys.localStorage.setItem(
                 JSON.stringify("currentPetInfo"),
                 JSON.stringify(petInfo)

@@ -35,16 +35,16 @@ function Pet(species, loyalty = 0) {
     this.asleep = false;
     
     this.increaseLoyalty = function (reward = 0) {
-        loyalty += reward;
+        this.loyalty += reward;
         
-        if (loyalty > PET_LOYALTY_MAX)
-            loyalty = PET_LOYALTY_MAX;
+        if (this.loyalty > PET_LOYALTY_MAX)
+            this.loyalty = PET_LOYALTY_MAX;
     }
     
     this.decreaseLoyalty = function (penalty = 0) {
-        loyalty -= penalty;
+        this.loyalty -= penalty;
         
-        if (loyalty < PET_LOYALTY_MIN)
-            loyalty = PET_LOYALTY_MIN;
+        if (this.loyalty < PET_LOYALTY_MIN)
+            this.loyalty = PET_LOYALTY_MIN;
     }
 }
